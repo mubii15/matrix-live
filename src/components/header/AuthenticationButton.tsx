@@ -2,7 +2,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import { GenericHeaderButton } from '@skybrush/mui-components';
+import GenericHeaderButton from '~/components/header/GenericHeaderButton';
 
 import AuthenticationStatusBadge from '~/components/badges/AuthenticationStatusBadge';
 import {

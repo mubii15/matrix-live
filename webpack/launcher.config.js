@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const baseConfig = require('./base.config.js');
+const { outputDir } = require('./helpers');
 
 const plugins = [
   new webpack.DefinePlugin({
@@ -16,6 +17,7 @@ module.exports = merge(baseConfig, {
   entry: './launcher.mjs',
   output: {
     filename: 'launcher.bundle.js',
+    path: outputDir,
   },
 
   /* prevent evaluation of __dirname and __filename at build time in

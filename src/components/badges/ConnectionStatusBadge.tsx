@@ -7,7 +7,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import countBy from 'lodash-es/countBy';
 import { connect } from 'react-redux';
 
-import { SidebarBadge } from '@skybrush/mui-components';
+import SidebarBadge from '~/components/header/SidebarBadge';
 
 import Colors from '~/components/colors';
 import type { ConnectionProperties } from '~/features/connections/types';

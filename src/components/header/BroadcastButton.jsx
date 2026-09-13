@@ -1,15 +1,10 @@
-import { styled } from '@mui/material/styles';
-import { keyframes } from '@mui/styled-engine';
 import PropTypes from 'prop-types';
 import { useEffect, useRef } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import {
-  GenericHeaderButton,
-  SidebarBadge,
-  Tooltip,
-} from '@skybrush/mui-components';
+import GenericHeaderButton from '~/components/header/GenericHeaderButton';
+import SidebarBadge from '~/components/header/SidebarBadge';
 
 import Colors from '~/components/colors';
 import { isBroadcast } from '~/features/session/selectors';
@@ -17,35 +12,6 @@ import { setBroadcast } from '~/features/session/slice';
 import Campaign from '~/icons/Campaign';
 
 const isValidTimeoutLength = (value) => typeof value === 'number' && value > 0;
-
-const cooldownKeyframes = keyframes({
-  from: {
-    height: '100%',
-  },
-  to: {
-    height: '0%',
-  },
-});
-
-const Underlay = styled('div')(({ active, timeoutLength }) => ({
-  position: 'absolute',
-  right: '0px',
-  bottom: '0px',
-  left: '0px',
-
-  height: '0%',
-
-  backgroundColor: Colors.warning,
-  opacity: 0.5,
-
-  animationName: active ? cooldownKeyframes : null,
-  animationDuration:
-    isValidTimeoutLength(timeoutLength) && Number.isFinite(timeoutLength)
-      ? `${timeoutLength}s`
-      : '100000s',
-  animationTimingFunction: 'linear',
-  animationIterationCount: '1',
-}));
 
 const BroadcastButton = ({ isBroadcast, setBroadcast, t, timeoutLength }) => {
   const timeout = useRef(undefined);
@@ -61,22 +27,32 @@ const BroadcastButton = ({ isBroadcast, setBroadcast, t, timeoutLength }) => {
     }
   }, [isBroadcast, setBroadcast, timeoutLength]);
 
+  const duration =
+    isValidTimeoutLength(timeoutLength) && Number.isFinite(timeoutLength)
+      ? `${timeoutLength}s`
+      : '100000s';
+
   return (
-    <Tooltip
-      content={
+    <GenericHeaderButton
+      tooltip={
         isBroadcast
           ? t('broadcastButton.disable')
           : t('broadcastButton.enable', { time: timeoutLength })
       }
+      onClick={() => setBroadcast(!isBroadcast)}
+      style={{ overflow: 'hidden' }}
     >
-      <GenericHeaderButton onClick={() => setBroadcast(!isBroadcast)}>
-        <Underlay active={isBroadcast} timeoutLength={timeoutLength} />
-        <SidebarBadge color={Colors.warning} visible={isBroadcast} />
-        <div style={{ position: 'relative' }}>
-          <Campaign />
-        </div>
-      </GenericHeaderButton>
-    </Tooltip>
+      {isBroadcast && (
+        <div
+          className='broadcast-cooldown-underlay'
+          style={{ animationDuration: duration }}
+        />
+      )}
+      <SidebarBadge color={Colors.warning} visible={isBroadcast} />
+      <div style={{ position: 'relative' }}>
+        <Campaign />
+      </div>
+    </GenericHeaderButton>
   );
 };
 

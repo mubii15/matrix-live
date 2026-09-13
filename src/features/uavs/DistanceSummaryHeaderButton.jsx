@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import { GenericHeaderButton } from '@skybrush/mui-components';
+import GenericHeaderButton from '~/components/header/GenericHeaderButton';
 
 import { isConnected } from '~/features/servers/selectors';
 import { usePeriodicSelector } from '~/hooks/usePeriodicSelector';

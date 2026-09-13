@@ -19,12 +19,12 @@ export const Colors = {
   grossShowConvexHull: '#fc0',
   netShowConvexHull: '#fc0fc0',
   flightArea: '#0c4',
-  plannedTrajectory: '#08f',
-  missionItem: '#0cf',
-  auxiliaryMissionItem: '#f80',
-  currentMissionItem: '#0fc',
-  doneMissionItem: '#0f8',
-  selectedMissionItem: '#fc0',
+  plannedTrajectory: '#6cdbba',
+  missionItem: '#6cdbba',
+  auxiliaryMissionItem: '#a8f5df',
+  currentMissionItem: '#d8f576',
+  doneMissionItem: '#489f86',
+  selectedMissionItem: '#d8f576',
 
   positionHold: yellow.A400,
 } as const;

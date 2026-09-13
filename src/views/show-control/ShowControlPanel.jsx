@@ -21,7 +21,29 @@ const ShowControlPanel = () => (
     <ShowControlPanelUpperSegment />
 
     <Box className='bottom-bar'>
-      <List dense disablePadding>
+      <List
+        dense
+        disablePadding
+        sx={{
+          p: 1,
+          bgcolor: 'transparent',
+          '& .MuiListItem-root': {
+            backgroundColor: 'transparent',
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            mb: 1.5,
+            overflow: 'hidden',
+            minHeight: '72px',
+            transition: 'background-color 0.2s',
+            '&:hover': {
+              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            },
+            '& .MuiListItemButton-root': {
+              height: '100%',
+            },
+          },
+        }}
+      >
         <AuthorizationButton />
       </List>
     </Box>

@@ -5,7 +5,7 @@ import CircleOnOutlined from '@mui/icons-material/CircleOutlined';
 import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
 import { Colors, isThemeDark } from '@skybrush/app-theme-mui';
-import { SidebarBadge } from '@skybrush/mui-components';
+import SidebarBadge from '~/components/header/SidebarBadge';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';

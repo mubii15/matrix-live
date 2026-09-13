@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 
 import LightControlGrid from './LightControlGrid';
@@ -18,10 +17,9 @@ const LightControlPanel = () => (
       overflow: 'hidden',
     }}
   >
-    <List dense>
+    <List dense sx={{ backgroundColor: 'transparent' }}>
       <LightControlMainSwitch />
     </List>
-    <Divider />
     <LightControlGrid />
   </Box>
 );

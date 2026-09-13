@@ -35,7 +35,31 @@ const ShowControlPanelUpperSegment = ({
 }: Props) => (
   <MultiPagePanel flex={1} selectedPage={isAuthorized ? 'execution' : 'setup'}>
     <Page scrollable id='setup'>
-      <List dense>
+      <List
+        dense
+        sx={{
+          p: 1,
+          bgcolor: 'transparent',
+          '& .MuiListItem-root': {
+            backgroundColor: 'transparent',
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            mb: 1.5,
+            overflow: 'hidden',
+            minHeight: '72px',
+            transition: 'background-color 0.2s',
+            '&:hover': {
+              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            },
+            '& .MuiListItemButton-root': {
+              height: '100%',
+            },
+          },
+          '& .MuiDivider-root': {
+            display: 'none',
+          },
+        }}
+      >
         <LoadShowFromFileButton />
 
         <Divider />

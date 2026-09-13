@@ -1,10 +1,16 @@
 {
-  "name": "@skybrush/live",
+  "name": "matrix-live",
   "version": "2.13.2",
   "description": "Ground control station of a Skybrush drone swarm",
   "main": "launcher.bundle.js",
   "scripts": {
-    "bundle": "rimraf build && cross-env NODE_ENV=production webpack --mode=production --progress --config webpack/dist.config.js",
+    "bundle": "rimraf build && cross-env NODE_ENV=production webpack --mode=production --progress --config webpack/dist.config.js && cross-env NODE_ENV=production webpack --mode=production --progress --config webpack/launcher.config.js && cross-env NODE_ENV=production webpack --mode=production --progress --config webpack/preload.config.js",
+    "dev": "npm run start:electron",
+    "dist": "npm run bundle && electron-builder",
+    "dist:all": "npm run bundle && electron-builder -mwl",
+    "dist:linux": "npm run bundle && electron-builder --linux",
+    "dist:mac": "npm run bundle && electron-builder --mac",
+    "dist:win": "npm run bundle && electron-builder --win",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
     "lint:check": "eslint .",
@@ -209,6 +215,7 @@
     "css-loader": "^7.1.2",
     "dotenv-webpack": "^8.1.1",
     "electron": "^39.2.7",
+    "electron-builder": "^25.1.8",
     "eslint": "^9.39.2",
     "eslint-plugin-react": "^7.37.5",
     "git-revision-webpack-plugin": "^5.0.0",
@@ -257,5 +264,5 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "packageManager": "npm"
+  "packageManager": "npm@10.8.2"
 }

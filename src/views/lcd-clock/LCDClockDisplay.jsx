@@ -1,5 +1,8 @@
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 import Lens from '@mui/icons-material/Lens';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -27,13 +30,11 @@ const noiseImage =
 const useStyles = makeStyles((theme) => ({
   root: {
     alignItems: 'stretch',
-    borderBottom:
-      theme.palette.mode === 'light' ? '4px solid #f4f4f4' : '4px solid black',
+    position: 'relative',
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
     overflow: 'hidden',
-    position: 'relative',
     userSelect: 'none',
     boxShadow:
       theme.palette.mode === 'light'
@@ -41,8 +42,15 @@ const useStyles = makeStyles((theme) => ({
         : undefined,
     transition: 'background-color 150ms',
 
-    '&:last-child': {
-      borderBottom: 'none',
+    '&:not(:last-child)::after': {
+      content: '""',
+      position: 'absolute',
+      bottom: 0,
+      left: '5%',
+      right: '5%',
+      height: '1px',
+      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent)',
+      zIndex: 10,
     },
   },
 
@@ -96,20 +104,14 @@ const LCDClockDisplay = ({
   const classes = useStyles();
   const theme = useTheme();
   const [ref, { height, width }] = useMeasure();
-  const themeType = isThemeDark(theme) ? 'dark' : 'light';
-  const presetProps = presets[themeType][preset] || presets[themeType][0];
+  const themeType = 'dark';
+  const presetProps = presets.dark[0];
 
-  const lcdStyle =
-    themeType === 'dark'
-      ? {
-          color: call(theme, presetProps.color, theme.palette.secondary.main),
-          decoration: 'glow',
-          offSegments: !hideInactiveSegmentsOnDarkLCD,
-        }
-      : {
-          color: call(theme, presetProps.color, 'black'),
-          decoration: 'shadow',
-        };
+  const lcdStyle = {
+    color: '#fff',
+    decoration: 'plain',
+    offSegments: false,
+  };
 
   // We assume that we show timestamps like 00:00:00:00 in the LCD display,
   // which is roughly 5x wider than tall.
@@ -119,10 +121,10 @@ const LCDClockDisplay = ({
       : 0;
 
   const finalStyle = {
-    backgroundColor: call(theme, presetProps.backgroundColor, 'black'),
-    backgroundImage: call(theme, presetProps.noise, false)
-      ? noiseImage
-      : undefined,
+    backgroundColor: 'transparent',
+    backgroundImage: 'radial-gradient(#000 30%, transparent 31%)',
+    backgroundSize: '4px 4px',
+    backgroundPosition: '0 0',
     ...style,
   };
 
@@ -137,14 +139,32 @@ const LCDClockDisplay = ({
         }}
       >
         {onAdd && (
-          <Box className={clsx(classes.button)} onClick={onAdd}>
-            <LCDText {...lcdStyle}>+</LCDText>
-          </Box>
+          <IconButton
+            size='small'
+            onClick={onAdd}
+            sx={{
+              width: 24,
+              height: 24,
+              color: '#fff',
+              p: 0,
+            }}
+          >
+            <AddIcon fontSize='small' />
+          </IconButton>
         )}
         {onRemove && (
-          <Box className={clsx(classes.button)} onClick={onRemove}>
-            <LCDText {...lcdStyle}>X</LCDText>
-          </Box>
+          <IconButton
+            size='small'
+            onClick={onRemove}
+            sx={{
+              width: 24,
+              height: 24,
+              color: '#fff',
+              p: 0,
+            }}
+          >
+            <CloseIcon fontSize='small' />
+          </IconButton>
         )}
         <Box sx={{ flex: 1 }} />
         <ClockSelector
@@ -164,6 +184,7 @@ const LCDClockDisplay = ({
         ref={ref}
         sx={{
           flex: 1,
+          minHeight: 60,
           overflow: 'hidden',
           display: 'flex',
           alignItems: 'center',
@@ -173,7 +194,7 @@ const LCDClockDisplay = ({
         <LCDClockDisplayLabel
           clockId={selectedClockId}
           height={lcdHeight}
-          variant='14segment'
+          variant='dotmatrix'
           {...lcdStyle}
         />
       </Box>

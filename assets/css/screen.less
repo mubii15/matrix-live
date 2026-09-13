@@ -175,6 +175,13 @@ mark {
   position: absolute !important;
   min-width: 48px;
   min-height: 48px;
+  background-color: #1a1b1e !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3) !important;
+  overflow: hidden;
+  color: #fff;
+
   /* Title of widget */
   .title {
     font-size: 10pt;
@@ -201,21 +208,50 @@ mark {
  * map is mounted, and we don't want it to override any of our styles */
 #main-map-view,
 #adapt-map-view {
+  &:not(.map-theme-light) {
+    /* Style base layer to be dark greyscale */
+    .ol-layer:first-child {
+      filter: grayscale(100%) brightness(0.55) contrast(1.15);
+    }
+  }
+
+  &.map-theme-light {
+    /* Keep base layer natural / light */
+    .ol-layer:first-child {
+      filter: none;
+    }
+  }
+
   /* Styling for OpenLayers controls */
   .ol-control {
-    .drop-shadow-box();
+    background-color: #1a1b1e !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3) !important;
+    overflow: hidden !important;
+    padding: 0 !important;
 
     button {
-      background-color: @box-background-color-light;
-      color: @box-foreground-color-light;
+      background-color: transparent;
+      color: rgba(255, 255, 255, 0.85);
       margin: 0px; /* to fit the Material design better */
-      width: 24px; /* 24px because Material buttons are 48px */
-      height: 24px;
+      width: 32px; 
+      height: 32px;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, color 0.2s ease;
+      font-size: 1.2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover,
       &:focus {
-        background-color: @box-background-color-light;
-        color: @box-foreground-color-light;
+        background-color: rgba(216, 245, 118, 0.15);
+        color: #d8f576;
+        transform: scale(1.08);
+      }
+
+      &:active {
+        transform: scale(0.92);
       }
     }
 
@@ -236,8 +272,9 @@ mark {
     }
 
     &.ol-zoom {
-      top: 8px;
-      left: 8px;
+      top: 80px;
+      left: 16px;
+      z-index: 1100;
     }
 
     &.ol-zoomslider {
@@ -252,8 +289,9 @@ mark {
   /* OpenLayers scale line should have a half-transparent "box styling" */
   .ol-scale-line {
     .drop-shadow-box();
-    bottom: 8px;
-    left: 8px;
+    bottom: 16px !important;
+    left: auto !important;
+    right: 580px !important;
   }
   .ol-scale-line-inner {
     border-color: @box-foreground-color-light;
@@ -366,8 +404,8 @@ mark {
     .drop-shadow-box();
 
     top: auto;
-    right: 8px;
-    bottom: 8px;
+    right: 392px !important;
+    bottom: 16px !important;
 
     padding: 10px !important;
 
@@ -480,3 +518,784 @@ mark {
     }
   }
 }
+
+/* Bottom Console Component Styles */
+.bottom-console-pill {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  z-index: 1100;
+  background-color: #1a1b1e;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(216, 245, 118, 0.15);
+    color: #d8f576;
+    border-color: #d8f576;
+  }
+}
+
+.bottom-console-container {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 392px;
+  height: 280px;
+  z-index: 1100;
+  background-color: #1a1b1e;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.bottom-console-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.bottom-console-tabs {
+  display: flex;
+  gap: 4px;
+  height: 100%;
+}
+
+.bottom-console-tab-item {
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: bold;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+
+  &:hover {
+    color: #d8f576;
+  }
+
+  &.active {
+    color: #d8f576;
+    border-bottom: 2px solid #d8f576;
+  }
+}
+
+.bottom-console-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  padding: 8px;
+}
+
+.bottom-console-close-btn {
+  color: rgba(255, 255, 255, 0.5);
+  &:hover {
+    color: #d8f576;
+  }
+}
+
+/* Light Control Component Styles */
+.light-control-root {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  background-color: #1a1b1e;
+  border-radius: 16px;
+  color: #fff;
+  user-select: none;
+}
+
+.light-control-presets {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.light-control-preset-btn {
+  flex: 1;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #131416;
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &.active {
+    background-color: #d8f576;
+    color: #1a1b1e;
+    border-color: #d8f576;
+
+    &:hover {
+      background-color: #c4e65a;
+      color: #1a1b1e;
+      border-color: #c4e65a;
+    }
+  }
+}
+
+.light-control-swatches {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 6px;
+  align-items: center;
+}
+
+.light-control-swatch {
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.1s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.light-control-swatch-selected-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.light-control-plus-swatch {
+  background: linear-gradient(135deg, #ff3b30, #ffcc00, #34c759, #5ac8fa, #5856d6);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.active {
+    border: 2px solid #d8f576;
+  }
+}
+
+.light-control-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.3s ease;
+}
+
+.light-control-sat-val-field {
+  position: relative;
+  height: 160px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: crosshair;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, #fff, transparent);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, #000, transparent);
+  }
+}
+
+.light-control-sat-val-handle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.light-control-sliders-hex {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.light-control-sliders {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.light-control-slider-wrapper {
+  position: relative;
+  height: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.light-control-slider-thumb {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background-color: transparent;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.light-control-hue-slider {
+  background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+}
+
+.light-control-opacity-checkerboard {
+  position: relative;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  background-image: repeating-conic-gradient(rgba(255, 255, 255, 0.15) 0% 25%, transparent 0% 50%);
+  background-size: 8px 8px;
+}
+
+.light-control-opacity-overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.light-control-hex-container {
+  background-color: #131416;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: 100px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.light-control-hex-input {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+  font-family: monospace;
+  width: 100%;
+  text-transform: uppercase;
+}
+
+/* UAV Status Summary Styles */
+.uav-status-summary-root {
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.uav-status-summary-inner {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  height: 100%;
+  padding: 0 8px;
+}
+
+.uav-status-summary-counter {
+  padding: 0 4px;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.uav-status-summary-off {
+  opacity: 0.5;
+}
+
+.uav-status-summary-light {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.uav-status-summary-btn {
+  background: none;
+  border: none;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: normal;
+  padding-left: 0;
+  padding-right: 0;
+  min-width: 48px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Header pill containers and buttons */
+.header-pill-container {
+  background-color: #1a1b1e;
+  color: #fff;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  padding: 4px 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  gap: 8px;
+  height: 48px;
+  overflow: hidden;
+  pointer-events: auto;
+  -webkit-app-region: no-drag;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+
+  .MuiTypography-root,
+  .MuiSvgIcon-root,
+  .wb-module-label,
+  button,
+  span {
+    color: #fff;
+  }
+
+  .wb-perspective-bar {
+    border-right: none;
+    border-bottom: none;
+    background: transparent;
+
+    button {
+      color: rgba(255, 255, 255, 0.65);
+      border-bottom: 2px solid transparent;
+
+      &:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.06);
+        border-bottom: 2px solid #d8f576;
+      }
+    }
+
+    .wb-perspective-selected button {
+      color: #d8f576;
+      border-bottom: 2px solid #d8f576;
+      background: rgba(216, 245, 118, 0.08);
+    }
+  }
+
+  &:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(216, 245, 118, 0.15);
+  }
+}
+
+.header-pill-expander {
+  background-color: #d8f576;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  height: 48px;
+  width: 48px;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-app-region: no-drag;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    background-color: #e2fb8e;
+    transform: scale(1.06);
+    box-shadow: 0 6px 18px rgba(216, 245, 118, 0.35);
+
+    svg {
+      transform: scale(1.15);
+    }
+  }
+
+  &:active {
+    transform: scale(0.94);
+  }
+
+  svg {
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
+
+.generic-header-button {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  min-width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+
+  &.with-label {
+    border-radius: 20px;
+  }
+
+  &[disabled] {
+    opacity: 0.4;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  svg {
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  &:not([disabled]):hover {
+    background-color: rgba(216, 245, 118, 0.15);
+    color: #d8f576;
+    transform: translateY(-1px) scale(1.05);
+    box-shadow: 0 2px 8px rgba(216, 245, 118, 0.2);
+
+    svg {
+      transform: scale(1.12);
+    }
+  }
+
+  &:not([disabled]):active {
+    transform: scale(0.92);
+    transition-duration: 0.1s;
+  }
+}
+
+.generic-header-button-label {
+  margin-left: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.65);
+  transition: color 0.2s ease;
+}
+
+.generic-header-button-secondary-label {
+  margin-left: 6px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.header-sidebar-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: #d32f2f;
+  color: white;
+  border-radius: 10px;
+  padding: 0 4px;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 14px;
+  min-width: 14px;
+  text-align: center;
+}
+
+@keyframes cooldownKeyframes {
+  from {
+    height: 100%;
+  }
+  to {
+    height: 0%;
+  }
+}
+
+.broadcast-cooldown-underlay {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  height: 0%;
+  background-color: #d8f576;
+  opacity: 0.5;
+  animation-name: cooldownKeyframes;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+}
+
+/* ==========================================================================
+   APP-WIDE MICRO-INTERACTIONS & PHYSICS ANIMATIONS
+   ========================================================================== */
+
+/* Keyframe Animations */
+@keyframes popCheck {
+  0% {
+    transform: scale(0.6);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes menuPopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.94) translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes dialogPopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.93) translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes tooltipPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 1. Global Buttons, Icon Buttons & Clickable Controls */
+button:not(.no-micro-interaction),
+.MuiButton-root,
+.MuiButtonBase-root:not(.MuiTab-root):not(.MuiMenuItem-root):not(.MuiListItemButton-root),
+.MuiIconButton-root,
+.MuiToggleButton-root,
+.MuiFab-root {
+  transition:
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.2s ease,
+    box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s ease,
+    color 0.2s ease !important;
+
+  &:not([disabled]):not(.Mui-disabled):hover {
+    transform: translateY(-1.5px) scale(1.02);
+
+    svg,
+    .MuiSvgIcon-root {
+      transform: scale(1.12);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+  }
+
+  &:not([disabled]):not(.Mui-disabled):active {
+    transform: scale(0.93) translateY(0) !important;
+    transition-duration: 0.08s !important;
+  }
+}
+
+/* Icon Buttons tactile feedback */
+.MuiIconButton-root {
+  &:not([disabled]):not(.Mui-disabled):hover {
+    transform: scale(1.12) !important;
+  }
+
+  &:not([disabled]):not(.Mui-disabled):active {
+    transform: scale(0.88) !important;
+  }
+}
+
+/* 2. List Items, Menu Items, Table Rows & Navigation */
+.MuiListItemButton-root,
+.MuiMenuItem-root,
+.MuiTableRow-root:not(.MuiTableRow-head) {
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease !important;
+
+  &:hover {
+    .MuiSvgIcon-root {
+      transform: scale(1.12);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+  }
+}
+
+/* 3. Switches, Checkboxes & Radio Controls */
+.MuiSwitch-root {
+  .MuiSwitch-thumb {
+    transition:
+      transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+      background-color 0.2s ease,
+      box-shadow 0.2s ease !important;
+  }
+
+  &:hover .MuiSwitch-thumb {
+    box-shadow: 0 0 10px rgba(216, 245, 118, 0.4);
+  }
+}
+
+.MuiCheckbox-root,
+.MuiRadio-root {
+  transition:
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    color 0.2s ease !important;
+
+  &:hover {
+    transform: scale(1.18);
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+
+  &.Mui-checked svg {
+    animation: popCheck 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
+
+/* 4. Chips & Badges */
+.MuiChip-root {
+  transition:
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease !important;
+
+  &:hover {
+    transform: translateY(-1.5px) scale(1.04);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+
+    .MuiChip-deleteIcon {
+      transform: rotate(90deg) scale(1.2);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+/* 5. Inputs, Text Fields & Form Controls */
+.MuiOutlinedInput-root,
+.MuiFilledInput-root,
+.MuiInputBase-root {
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.2s ease,
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+
+  &.Mui-focused {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), 0 0 0 2px rgba(216, 245, 118, 0.25) !important;
+  }
+}
+
+/* 6. Sliders */
+.MuiSlider-root {
+  .MuiSlider-thumb {
+    transition:
+      transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+
+    &:hover,
+    &.Mui-focusVisible {
+      transform: scale(1.35) !important;
+      box-shadow: 0 0 0 8px rgba(216, 245, 118, 0.2) !important;
+    }
+
+    &.Mui-active {
+      transform: scale(1.5) !important;
+      box-shadow: 0 0 0 12px rgba(216, 245, 118, 0.35) !important;
+    }
+  }
+}
+
+/* 7. Dialogs, Popovers, Menus & Tooltips */
+.MuiMenu-paper,
+.MuiPopover-paper {
+  animation: menuPopIn 0.24s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+}
+
+.MuiDialog-paper {
+  animation: dialogPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+}
+
+.MuiTooltip-tooltip {
+  animation: tooltipPop 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 8. Tabs & Accordions */
+.MuiTab-root {
+  transition:
+    color 0.2s ease,
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.2s ease !important;
+
+  &:hover {
+    transform: translateY(-1px);
+    color: #d8f576 !important;
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+.MuiAccordionSummary-expandIconWrapper {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+

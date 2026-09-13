@@ -27,6 +27,44 @@ const migrations = {
       };
     }
   }),
+  4: createNextState((state) => {
+    if (state.layers?.byId?.base?.parameters) {
+      if (state.layers.byId.base.parameters.source === 'osm') {
+        state.layers.byId.base.parameters.source = 'cartodb.dark';
+      }
+    }
+  }),
+  5: createNextState((state) => {
+    if (state.map?.layers?.byId?.base?.parameters) {
+      if (state.map.layers.byId.base.parameters.source === 'osm') {
+        state.map.layers.byId.base.parameters.source = 'cartodb.dark';
+      }
+    }
+  }),
+  6: createNextState((state) => {
+    if (state.map?.layers?.byId?.base?.parameters) {
+      const src = state.map.layers.byId.base.parameters.source;
+      if (src === 'osm' || src === 'cartodb.dark') {
+        state.map.layers.byId.base.parameters.source = 'stadia.alidade_smooth_dark';
+      }
+    }
+  }),
+  7: createNextState((state) => {
+    if (state.map?.layers?.byId?.base?.parameters) {
+      const src = state.map.layers.byId.base.parameters.source;
+      if (src === 'stadia.alidade_smooth_dark') {
+        state.map.layers.byId.base.parameters.source = 'cartodb.dark';
+      }
+    }
+  }),
+  8: createNextState((state) => {
+    if (state.map?.layers?.byId?.base?.parameters) {
+      const src = state.map.layers.byId.base.parameters.source;
+      if (src === 'cartodb.dark') {
+        state.map.layers.byId.base.parameters.source = 'stadia.alidade_smooth_dark';
+      }
+    }
+  }),
 };
 
 export default createMigrate(migrations);

@@ -20,7 +20,7 @@ const baseline: Config = {
       width: 96,
       height: 96,
     },
-    splashTitle: 'skybrush live',
+    splashTitle: 'matrix live',
   },
 
   ephemeral: false,
@@ -57,6 +57,8 @@ const baseline: Config = {
       'app-settings-button',
       'alert-button',
       'session-expiry-box',
+      'map-theme-toggle-button',
+      'toggle-3d-view-button',
     ],
   ],
 

@@ -14,14 +14,27 @@ type MapToolbarsProps = Readonly<{
 const MapToolbars = ({ left, top }: MapToolbarsProps) => (
   <>
     {left && (
-      <Widget key='Widget.LeftToolbar' style={{ top: 8 + 48 + 8, left: 8 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>{left}</Box>
-      </Widget>
+      <Box style={{ position: 'absolute', top: 156, left: 16, pointerEvents: 'none', zIndex: 1100 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', pointerEvents: 'auto' }}>{left}</Box>
+      </Box>
     )}
     {top && (
-      <Widget key='Widget.TopToolbar' style={{ top: 8, left: 8 + 24 + 8 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'row' }}>{top}</Box>
-      </Widget>
+      <Box
+        key='Widget.TopToolbar'
+        className='header-pill-container'
+        style={{
+          position: 'absolute',
+          top: 16,
+          left: 80,
+          zIndex: 1100,
+          pointerEvents: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+        }}
+      >
+        {top}
+      </Box>
     )}
   </>
 );

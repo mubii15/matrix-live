@@ -32,12 +32,21 @@ const iconForStartMethod = {
  * authorization has been given.
  */
 const StartMethodExplanation = ({ hasScheduledStartTime, startMethod, t }) => (
-  <List dense>
-    <ListItem>
-      <ListItemIcon>
+  <List dense sx={{ padding: 0, backgroundColor: 'transparent !important' }}>
+    <ListItem
+      sx={{
+        backgroundColor: 'transparent !important',
+        border: '1px solid rgba(216, 245, 118, 0.5)',
+        borderRadius: '8px',
+        marginBottom: 1,
+      }}
+    >
+      <ListItemIcon sx={{ color: '#d8f576' }}>
         {iconForStartMethod[startMethod] || <HelpOutline />}
       </ListItemIcon>
       <ListItemText
+        primaryTypographyProps={{ sx: { color: '#d8f576', fontWeight: 600 } }}
+        secondaryTypographyProps={{ sx: { color: 'rgba(216, 245, 118, 0.7)' } }}
         primary={
           primaryTextForStartMethod[startMethod]?.(t) ||
           t('show.unknownStartMode')

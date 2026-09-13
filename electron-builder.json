@@ -1,7 +1,7 @@
 {
-  "appId": "com.collmot.skybrush.live",
-  "productName": "Skybrush Live",
-  "artifactName": "${productName} ${version}.${ext}",
+  "appId": "io.skybrush.live",
+  "productName": "Matrix Live",
+  "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
   "files": [
     "!**/*",
     "package.json",

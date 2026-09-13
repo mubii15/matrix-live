@@ -20,6 +20,11 @@ export namespace Source {
     ROAD = 'bingMaps.road',
   }
 
+  export enum CARTODB {
+    DARK = 'cartodb.dark',
+    LIGHT = 'cartodb.light',
+  }
+
   export enum GOOGLE {
     DEFAULT = 'googleMaps.default',
     SATELLITE = 'googleMaps.satellite',
@@ -42,6 +47,10 @@ export namespace Source {
   export const NEXTZEN = 'nextzen';
   export const OSM = 'osm';
 
+  export enum STADIA {
+    ALIDADE_SMOOTH_DARK = 'stadia.alidade_smooth_dark',
+  }
+
   export enum STAMEN {
     TERRAIN = 'stamen.terrain',
     TONER = 'stamen.toner',
@@ -50,18 +59,26 @@ export namespace Source {
 
   export type Source =
     | BING
+    | CARTODB
     | GOOGLE
     | MAPBOX
     | MAPTILER
     | typeof NEXTZEN
     | typeof OSM
+    | STADIA
     | STAMEN;
 }
 
 /**
  * Constant containing all the sources in the order preferred on the UI.
  */
-export const Sources: Source.Source[] = [Source.OSM, Source.STAMEN.TERRAIN];
+export const Sources: Source.Source[] = [
+  Source.CARTODB.DARK,
+  Source.STADIA.ALIDADE_SMOOTH_DARK,
+  Source.CARTODB.LIGHT,
+  Source.OSM,
+  Source.STAMEN.TERRAIN,
+];
 
 // We add Mapbox, Maptiler, Bing Maps and Google Maps map sources only if we
 // have at least a default API key for them. This might change in the future.
@@ -99,6 +116,10 @@ if (config.map.tileProviders.googleMaps && APIKeys.GOOGLE) {
 }
 
 const attributions = {
+  cartodb: [
+    '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    '© <a href="https://carto.com/attributions">CARTO</a>',
+  ],
   mapbox: [
     '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a>',
     '© <a href="https://www.openstreetmap.org/copyright">' +
@@ -134,6 +155,14 @@ const visualRepresentationsForSources: Record<
     label: 'Bing Maps (aerial with labels)',
   },
   [Source.BING.ROAD]: { label: 'Bing Maps (road)' },
+  [Source.CARTODB.DARK]: {
+    label: 'CartoDB Dark Matter',
+    attributions: attributions.cartodb,
+  },
+  [Source.CARTODB.LIGHT]: {
+    label: 'CartoDB Positron',
+    attributions: attributions.cartodb,
+  },
   [Source.GOOGLE.DEFAULT]: { label: 'Google Maps' },
   [Source.GOOGLE.SATELLITE]: { label: 'Google Maps (satellite)' },
   [Source.GOOGLE.ROADS]: { label: 'Google Maps (roads)' },
@@ -167,6 +196,10 @@ const visualRepresentationsForSources: Record<
   },
   [Source.NEXTZEN]: { label: 'Nextzen', attributions: attributions.nextzen },
   [Source.OSM]: { label: 'OpenStreetMap' },
+  [Source.STADIA.ALIDADE_SMOOTH_DARK]: {
+    label: 'Alidade Smooth Dark',
+    attributions: attributions.stamen,
+  },
   [Source.STAMEN.TERRAIN]: {
     label: 'Stamen terrain',
     attributions: attributions.stamen,

@@ -1,5 +1,5 @@
 import Help from '@mui/icons-material/HelpOutline';
-import { GenericHeaderButton } from '@skybrush/mui-components';
+import GenericHeaderButton from '~/components/header/GenericHeaderButton';
 import { Translation } from 'react-i18next';
 
 import { isHelpAvailable, showHelp } from '~/utils/help';

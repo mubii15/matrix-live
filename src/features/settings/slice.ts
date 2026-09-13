@@ -41,7 +41,7 @@ const initialState: SettingsSliceState = {
     showMissionIds: false,
     showMouseCoordinates: true,
     showScaleLine: true,
-    theme: ThemeType.AUTO,
+    theme: ThemeType.DARK,
     hideInactiveSegmentsOnDarkLCD: false,
     uavListFilters: [
       /* Each item in this array is currently a string from the UAVFilter

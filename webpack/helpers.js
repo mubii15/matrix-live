@@ -8,6 +8,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 const useHotModuleReloading = isDevelopment && process.env.DEPLOYMENT !== '1';
 
 const htmlMetaTags = {
+  title: 'Matrix Live: The Next-generation Drone Light Show Software Suite',
   charset: 'utf-8',
   description:
     'Skybrush Live: The Next-generation Drone Light Show Software Suite',

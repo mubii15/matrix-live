@@ -5,6 +5,10 @@ import { useMemo } from 'react';
 
 require('~/../assets/css/dseg.css');
 
+const style = document.createElement('style');
+style.textContent = `@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');`;
+document.head.appendChild(style);
+
 const variants = {
   default: {},
 
@@ -16,6 +20,11 @@ const variants = {
   '14segment': {
     fontFamily: 'DSEG14-Classic',
     allSegmentsChar: '~',
+  },
+
+  'dotmatrix': {
+    fontFamily: '"VT323", monospace',
+    allSegmentsChar: '',
   },
 };
 

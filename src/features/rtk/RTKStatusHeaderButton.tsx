@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 
+import GenericHeaderButton from '~/components/header/GenericHeaderButton';
+import SidebarBadge from '~/components/header/SidebarBadge';
 import {
-  GenericHeaderButton,
   LazyTooltip,
-  SidebarBadge,
-} from '@skybrush/mui-components';
+  } from '@skybrush/mui-components';
 
 import { isConnected } from '~/features/servers/selectors';
 import Satellite from '~/icons/Satellite';

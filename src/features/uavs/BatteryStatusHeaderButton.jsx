@@ -5,9 +5,9 @@ import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import { colorForStatus, Status } from '@skybrush/app-theme-mui';
+import GenericHeaderButton from '~/components/header/GenericHeaderButton';
+import SidebarBadge from '~/components/header/SidebarBadge';
 import {
-  GenericHeaderButton,
-  SidebarBadge,
   Tooltip,
 } from '@skybrush/mui-components';
 

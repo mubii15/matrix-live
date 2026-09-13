@@ -7,7 +7,8 @@ import { connect } from 'react-redux';
 import { useAudio, useInterval, useMount } from 'react-use';
 
 import { makeStyles } from '@skybrush/app-theme-mui';
-import { GenericHeaderButton, SidebarBadge } from '@skybrush/mui-components';
+import GenericHeaderButton from './GenericHeaderButton';
+import SidebarBadge from './SidebarBadge';
 
 import Colors from '~/components/colors';
 import { acknowledgeOrToggleMuted } from '~/features/alert/actions';

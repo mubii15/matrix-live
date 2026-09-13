@@ -6,42 +6,14 @@ import { type PerspectiveName, type PerspectiveObject } from 'perspective';
 const commonLayouts: Record<PerspectiveName, PerspectiveObject> = {
   default: {
     label: 'Default',
+    hideHeaders: true,
     layout: {
-      type: 'columns',
+      type: 'stack',
       contents: [
         {
-          type: 'stack',
-          contents: [
-            { type: 'panel', component: 'map', id: 'map' },
-            { type: 'panel', component: 'uav-list', id: 'uavList' },
-            { type: 'panel', component: 'three-d-view', id: 'threeDView' },
-          ],
-        },
-        {
-          type: 'rows',
-          contents: [
-            {
-              type: 'stack',
-              contents: [
-                { type: 'panel', component: 'lcd-clock-panel', id: 'clocks' },
-                {
-                  type: 'panel',
-                  component: 'saved-location-list',
-                  id: 'locations',
-                },
-                { type: 'panel', component: 'layer-list', id: 'layers' },
-              ],
-              height: 25,
-            },
-            {
-              type: 'stack',
-              contents: [
-                { type: 'panel', component: 'show-control', id: 'show' },
-                { type: 'panel', component: 'light-control', id: 'lights' },
-              ],
-            },
-          ],
-          width: 25,
+          type: 'panel',
+          component: 'map',
+          id: 'map',
         },
       ],
     },

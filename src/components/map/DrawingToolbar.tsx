@@ -11,7 +11,6 @@ import SelectAll from '@mui/icons-material/SelectAll';
 import ShowChart from '@mui/icons-material/ShowChart';
 import StarBorder from '@mui/icons-material/StarBorder';
 import ZoomIn from '@mui/icons-material/ZoomIn';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import type { SvgIconProps } from '@mui/material/SvgIcon';
 
@@ -110,23 +109,34 @@ const DrawingToolbar = ({
   selectedTool,
   t,
 }: DrawingToolbarProps) => {
-  const colorForTool = (tool: Tool): SvgIconProps['color'] =>
-    selectedTool === tool ? 'primary' : undefined;
-
   return (
-    <div style={{ display: 'flex', flexFlow: 'column nowrap' }}>
+    <div style={{ display: 'flex', flexFlow: 'column nowrap', gap: '8px' }}>
       {drawingTools
         .flatMap((group) => [
-          <Divider key={`drawing-toolbar-group:${group.join(',')}`} />,
+          <div key={`drawing-toolbar-group:${group.join(',')}`} style={{ height: '8px' }} />,
           ...group.map((toolId) => {
             const { tool, label, icon: Icon } = drawingToolRegistry[toolId];
             return (
               <Tooltip key={toolId} content={label(t)} placement='right'>
                 <IconButton
-                  size='large'
+                  size='medium'
                   onClick={partial(onToolSelected, tool)}
+                  sx={{
+                    backgroundColor: selectedTool === tool ? '#1a1b1e' : 'rgba(26, 27, 30, 0.88)',
+                    color: selectedTool === tool ? '#d8f576' : 'rgba(255, 255, 255, 0.75)',
+                    border: selectedTool === tool ? '2px solid #d8f576' : '1px solid rgba(255, 255, 255, 0.12)',
+                    backdropFilter: 'blur(8px)',
+                    boxShadow: selectedTool === tool ? '0 4px 16px rgba(0, 0, 0, 0.5), 0 0 12px rgba(216, 245, 118, 0.4)' : '0 4px 12px rgba(0, 0, 0, 0.3)',
+                    '&:hover': {
+                      backgroundColor: selectedTool === tool ? '#22242a' : 'rgba(45, 50, 59, 0.95)',
+                      color: selectedTool === tool ? '#d8f576' : '#fff',
+                    },
+                    width: 40,
+                    height: 40,
+                    transition: 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  }}
                 >
-                  <Icon color={colorForTool(tool)} />
+                  <Icon sx={{ fontSize: 20 }} />
                 </IconButton>
               </Tooltip>
             );

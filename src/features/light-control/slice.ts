@@ -8,11 +8,13 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 type LightControlSliceState = {
   active: boolean;
   color: string;
+  panelOpen: boolean;
 };
 
 const initialState: LightControlSliceState = {
   active: false,
   color: '#ffffff',
+  panelOpen: false,
 };
 
 // TODO: Remove unnecessary type checks and conversions!
@@ -35,6 +37,10 @@ const { actions, reducer } = createSlice({
     setLightControlActive(state, action: PayloadAction<boolean>) {
       state.active = Boolean(action.payload);
     },
+
+    setLightControlPanelOpen(state, action: PayloadAction<boolean>) {
+      state.panelOpen = Boolean(action.payload);
+    },
   },
 });
 
@@ -44,6 +50,7 @@ export const {
   // the server about the change.
   setColor,
   setLightControlActive,
+  setLightControlPanelOpen,
 } = actions;
 
 export default reducer;

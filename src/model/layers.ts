@@ -116,7 +116,7 @@ const propertiesForLayerTypes: Record<
     label: 'Base layer',
     icon: Map,
     parameters: {
-      source: 'osm',
+      source: 'stadia.alidade_smooth_dark',
     },
   },
   [LayerType.BEACONS]: {

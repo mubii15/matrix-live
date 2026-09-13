@@ -47,14 +47,14 @@ const ColoredButton = ({
       focusRipple
       className={clsx(classes.root, className)}
       sx={(theme) => ({
-        backgroundColor: color,
-        color: parsedColor.isLight()
-          ? 'rgba(0, 0, 0, 0.87)'
-          : 'rgba(255, 255, 255, 0.87)',
+        backgroundColor: 'transparent',
+        color: color,
+        border: `1px solid ${parsedColor.alpha(0.5).string()}`,
+        borderRadius: '8px',
         padding: theme.spacing(1, dense ? 1 : 3),
         '&:hover': {
-          backgroundColor: parsedColor.darken(0.16).string(),
-          boxShadow: theme.shadows[4],
+          backgroundColor: parsedColor.alpha(0.1).string(),
+          border: `1px solid ${color}`,
         },
       })}
       {...rest}

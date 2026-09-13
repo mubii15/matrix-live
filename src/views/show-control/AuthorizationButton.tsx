@@ -6,9 +6,9 @@ import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import { StatusLight } from '@skybrush/mui-components';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
-import { Status } from '~/components/semantics';
+import type { Status } from '~/components/semantics';
 import { setCommandsAreBroadcast } from '~/features/mission/slice';
 import {
   countUAVsTakingOffAutomatically,
@@ -22,8 +22,20 @@ import { getSetupStageStatuses } from '~/features/show/stages';
 import type { AppDispatch, RootState } from '~/store/reducers';
 
 const buttonStyle: SxProps<typeof ListItemButton> = {
+  backgroundColor: '#d8f576',
+  color: '#1a1b1e',
+  border: '1px solid #d8f576',
+  borderRadius: '8px',
+  '&:hover': {
+    backgroundColor: '#c4e65a',
+    border: '1px solid #c4e65a',
+  },
   '&.Mui-selected': {
-    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+    backgroundColor: '#c4e65a',
+    border: '1px solid #c4e65a',
+  },
+  '& .MuiTypography-colorTextSecondary': {
+    color: 'rgba(26, 27, 30, 0.7)',
   },
 };
 
@@ -54,11 +66,7 @@ const AuthorizationButton = ({
         sx={buttonStyle}
         {...rest}
       >
-        <StatusLight
-          status={
-            isAuthorized && status === Status.OFF ? Status.SKIPPED : status
-          }
-        />
+        <RocketLaunchIcon sx={{ ml: 0.5, mr: 2, fontSize: 28 }} />
         <ListItemText
           disableTypography
           primary={
@@ -69,7 +77,7 @@ const AuthorizationButton = ({
             </Typography>
           }
           secondary={
-            <Typography variant='body2' color='textSecondary'>
+            <Typography variant='body2' sx={{ color: 'rgba(26, 27, 30, 0.7)' }}>
               {isAuthorized
                 ? numUAVsTakingOffAutomatically <= 0
                   ? t('show.revokeAuthorization')

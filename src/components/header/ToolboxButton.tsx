@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import { GenericHeaderButton, SidebarBadge } from '@skybrush/mui-components';
+import GenericHeaderButton from './GenericHeaderButton';
+import SidebarBadge from './SidebarBadge';
 
 import Colors from '~/components/colors';
 import { getActiveUAVIdsBeingAveraged } from '~/features/measurement/selectors';

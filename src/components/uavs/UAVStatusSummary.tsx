@@ -1,12 +1,8 @@
-import Sum from '@mui/icons-material/Functions';
-import Box, { type BoxProps } from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import { createSelector } from '@reduxjs/toolkit';
 import clsx from 'clsx';
 import React, { useContext } from 'react';
 import { connect } from 'react-redux';
 
-import { makeStyles } from '@skybrush/app-theme-mui';
 import { LazyTooltip, StatusLight } from '@skybrush/mui-components';
 
 import { Status } from '~/components/semantics';
@@ -93,52 +89,26 @@ const getStatusSummary = createShallowSelector(
 
 /* ************************************************************************ */
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    fontSize: '1rem',
-    cursor: 'pointer',
-  },
+const SumIcon = () => (
+  <svg
+    width='14'
+    height='14'
+    viewBox='0 0 24 24'
+    fill='none'
+    stroke='currentColor'
+    strokeWidth='2.5'
+    strokeLinecap='round'
+    strokeLinejoin='round'
+    style={{ flexShrink: 0 }}
+  >
+    <path d='M18 4H6l7 8-7 8h12' />
+  </svg>
+);
 
-  inner: {
-    alignItems: 'center',
-    display: 'flex',
-    gap: theme.spacing(1),
-    height: '100%',
-    padding: theme.spacing(0, 1),
-  },
-
-  counter: {
-    padding: theme.spacing(0, 0.5),
-    userSelect: 'none',
-    fontVariantNumeric: 'tabular-nums',
-  },
-
-  off: {
-    opacity: 0.5,
-  },
-
-  statusLight: {
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-
-  button: {
-    color: 'white',
-    display: 'flex',
-    flexDirection: 'row',
-    fontSize: '1rem',
-    fontWeight: 'normal',
-    paddingLeft: 0,
-    paddingRight: 0,
-    minWidth: 48,
-    textShadow: '0 1px 2px rgba(0, 0, 0, 0.65)' /* copied from .wb-module */,
-
-    '&:hover': {
-      boxShadow: theme.shadows[2],
-    },
-  },
-}));
+type UAVStatusSummaryProps = {
+  counts: number[];
+  selectAllUAVs: () => void;
+};
 
 const statusOrder: Array<Status | null> = [
   Status.SUCCESS,
@@ -149,31 +119,23 @@ const statusOrder: Array<Status | null> = [
   null,
 ];
 
-type UAVStatusSummaryProps = {
-  counts: number[];
-  selectAllUAVs: () => void;
-} & Omit<BoxProps, 'children'>;
-
 const UAVStatusSummary = ({
   counts,
   selectAllUAVs,
-  ...rest
 }: UAVStatusSummaryProps) => {
-  const classes = useStyles();
   const workbench = useContext(Workbench);
 
   return (
     <LazyTooltip interactive content={<UAVStatusMiniList />}>
-      <Box
-        className={clsx(classes.root, 'wb-module')}
+      <div
+        className='uav-status-summary-root'
         onClick={() => {
           if (!workbench.bringToFront('uavList')) {
             showWarning('UAVs panel is not added to the workbench yet');
           }
         }}
-        {...rest}
       >
-        <div className={classes.inner}>
+        <div className='uav-status-summary-inner'>
           {statusOrder.map((statusCode, index) => {
             const content = (
               <React.Fragment>
@@ -183,12 +145,12 @@ const UAVStatusSummary = ({
                     status={counts[index] > 0 ? statusCode : Status.OFF}
                   />
                 ) : (
-                  <Sum />
+                  <SumIcon />
                 )}
                 <div
                   className={clsx(
-                    classes.counter,
-                    counts[index] <= 0 && classes.off
+                    'uav-status-summary-counter',
+                    counts[index] <= 0 && 'uav-status-summary-off'
                   )}
                 >
                   {counts[index]}
@@ -197,21 +159,24 @@ const UAVStatusSummary = ({
             );
 
             return statusCode === null ? (
-              <Button
+              <button
                 key='total'
-                className={classes.button}
-                onClick={() => selectAllUAVs()}
+                className='uav-status-summary-btn'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  selectAllUAVs();
+                }}
               >
                 {content}
-              </Button>
+              </button>
             ) : (
-              <div key={statusCode.toString()} className={classes.statusLight}>
+              <div key={statusCode.toString()} className='uav-status-summary-light'>
                 {content}
               </div>
             );
           })}
         </div>
-      </Box>
+      </div>
     </LazyTooltip>
   );
 };

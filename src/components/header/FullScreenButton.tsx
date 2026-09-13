@@ -4,10 +4,7 @@ import { Translation } from 'react-i18next';
 import { useEvent, useUpdate } from 'react-use';
 import ScreenFull from 'screenfull';
 
-import {
-  GenericHeaderButton,
-  type GenericHeaderButtonProps,
-} from '@skybrush/mui-components';
+import GenericHeaderButton, { type GenericHeaderButtonProps } from '~/components/header/GenericHeaderButton';
 
 import { toggleFullScreen } from '~/utils/full-screen';
 

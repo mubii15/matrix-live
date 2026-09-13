@@ -2,11 +2,8 @@ import LooksTwo from '@mui/icons-material/LooksTwo';
 import { useTheme } from '@mui/material/styles';
 import { connect } from 'react-redux';
 
-import {
-  GenericHeaderButton,
-  type GenericHeaderButtonProps,
-  SidebarBadge,
-} from '@skybrush/mui-components';
+import GenericHeaderButton, { type GenericHeaderButtonProps } from '~/components/header/GenericHeaderButton';
+import SidebarBadge from '~/components/header/SidebarBadge';
 
 import Colors from '~/components/colors';
 import { getPreferredCommunicationChannelIndex } from '~/features/mission/selectors';

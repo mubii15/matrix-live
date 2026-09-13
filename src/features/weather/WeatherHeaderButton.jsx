@@ -6,11 +6,11 @@ import TimeAgo from 'react-timeago';
 import { useToggle } from 'react-use';
 
 import { colorForStatus, Status } from '@skybrush/app-theme-mui';
+import GenericHeaderButton from '~/components/header/GenericHeaderButton';
+import SidebarBadge from '~/components/header/SidebarBadge';
 import {
-  GenericHeaderButton,
   LazyTooltip,
-  SidebarBadge,
-} from '@skybrush/mui-components';
+  } from '@skybrush/mui-components';
 
 import { usePeriodicRefresh } from '~/hooks';
 import Sunrise from '~/icons/Sunrise';

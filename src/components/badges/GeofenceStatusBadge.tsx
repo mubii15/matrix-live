@@ -5,7 +5,7 @@
 
 import { connect } from 'react-redux';
 
-import { SidebarBadge } from '@skybrush/mui-components';
+import SidebarBadge from '~/components/header/SidebarBadge';
 
 import { colorForStatus } from '~/components/colors';
 import { Status } from '~/components/semantics';

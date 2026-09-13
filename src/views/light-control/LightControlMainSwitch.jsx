@@ -17,6 +17,12 @@ const LightControlMainSwitch = ({ active, connected, onToggle, t }) => (
   <ListItemButton
     disabled={!connected}
     onClick={connected ? onToggle : undefined}
+    sx={{
+      '&.Mui-disabled': {
+        backgroundColor: 'transparent !important',
+        opacity: 0.5,
+      },
+    }}
   >
     <Switch checked={active && connected} />
     <ListItemText

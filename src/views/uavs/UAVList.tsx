@@ -454,6 +454,7 @@ const UAVList = connect(
   // mapStateToProps
   (state: RootState) => ({
     editingMapping: isMappingEditable(state),
+    items: getDisplayedItems(state),
     mappingSlotBeingEdited: getIndexOfMappingSlotBeingEdited(state),
     layout: getUAVListLayout(state),
     selection: getSelection(state),

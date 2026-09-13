@@ -17,9 +17,10 @@ import type { RootState } from './store/reducers';
 // @ts-expect-error TS(2307)
 import darkModeExtraCSS from '!!raw-loader!~/../assets/css/dark-mode.css';
 
+import { ThemeType } from '@skybrush/app-theme-mui';
+
 /**
- * Specialized Material-UI theme provider that is aware about the user's
- * preference about whether to use a dark or a light theme.
+ * Specialized Material-UI theme provider that defaults to dark theme.
  */
 const DarkModeAwareThemeProvider = createThemeProvider({
   primaryColor: (dark) => (dark ? orange : blue),
@@ -27,19 +28,22 @@ const DarkModeAwareThemeProvider = createThemeProvider({
 });
 
 /**
- * Specialized theme provider that dynamically loads a CSS file to update the
- * theme of the workbench to fit dark mode.
+ * Specialized theme provider that dynamically loads dark mode CSS for workbench and panels.
  */
 export const DarkModeExtraCSSProvider = () => {
-  const isDark = isThemeDark(useTheme());
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  useConditionalCSS(darkModeExtraCSS, isDark);
+  const theme = useTheme();
+  const isDark = isThemeDark(theme);
+  // Ensure dark-mode stylesheet is applied for dark mode or defaults
+  useConditionalCSS(darkModeExtraCSS, true);
   return null;
 };
 
 export default connect(
   // mapStateToProps
   (state: RootState) => ({
-    type: state.settings.display.theme,
+    type:
+      state.settings.display.theme === ThemeType.AUTO || !state.settings.display.theme
+        ? ThemeType.DARK
+        : state.settings.display.theme,
   })
 )(DarkModeAwareThemeProvider);

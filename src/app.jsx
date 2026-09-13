@@ -7,12 +7,15 @@ import { WorkbenchView } from 'react-flexible-workbench';
 import { connect, Provider as StoreProvider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
 
+import CloseIcon from '@mui/icons-material/Close';
 import { StyledEngineProvider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
+import IconButton from '@mui/material/IconButton';
 
 import CornerRibbon from './components/CornerRibbon';
 import dialogs from './components/dialogs';
 import Header from './components/header';
+import RightSidebar from './components/RightSidebar';
 import ServerConnectionManager from './components/ServerConnectionManager';
 import CollectiveRTHDialog from './features/collective-rth/CollectiveRTHDialog';
 import DetachedPanelManager from './features/detachable-panels/DetachedPanelManager';
@@ -43,6 +46,13 @@ import {
   shouldSidebarBeShown,
 } from './features/workbench/selectors';
 import ShowFileWatcher from './views/show-control/ShowFileWatcher';
+import ShowControlPanel from './views/show-control/ShowControlPanel';
+import LCDClockPanel from './views/lcd-clock/LCDClockPanel';
+import LightControlPanel from './views/light-control';
+import BottomConsole from './components/BottomConsole';
+import BottomUAVsWindow from './components/BottomUAVsWindow';
+import { isLightControlPanelOpen } from './features/light-control/selectors';
+import { setLightControlPanelOpen } from './features/light-control/slice';
 
 import { ErrorHandler } from './error-handling';
 import flock, { Flock } from './flock';
@@ -112,7 +122,7 @@ waitUntilStateRestored().then(() => {
 
 const WorkbenchContainerPresentation = ({ isFixed, showSidebar }) => (
   <div className={clsx(isFixed && 'workbench-fixed')} style={rootInnerStyle}>
-    {showSidebar ? <Sidebar workbench={workbench} /> : null}
+    {/* Temporarily hidden: {showSidebar ? <Sidebar workbench={workbench} /> : null} */}
     <WorkbenchView workbench={workbench} />
   </div>
 );
@@ -132,20 +142,128 @@ const WorkbenchContainer = connect(
   null
 )(WorkbenchContainerPresentation);
 
+
+
+const FloatingLightControlPresentation = ({ isOpen, onClose }) => {
+  if (!isOpen) {
+    return null;
+  }
+
+  return (
+    <div style={{
+      position: 'absolute',
+      top: 80,
+      right: 392,
+      zIndex: 1100,
+      width: 340,
+      pointerEvents: 'auto',
+      backgroundColor: '#1a1b1e',
+      borderRadius: '16px',
+      padding: '12px',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '8px',
+    }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingBottom: '8px',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+      }}>
+        <span style={{ fontWeight: 'bold', fontSize: '14px', color: '#fff' }}>Light Control</span>
+        <IconButton
+          onClick={onClose}
+          size='small'
+          sx={{
+            color: 'rgba(255, 255, 255, 0.5)',
+            p: 0,
+            '&:hover': {
+              color: '#fff',
+            },
+          }}
+        >
+          <CloseIcon fontSize='small' />
+        </IconButton>
+      </div>
+      <LightControlPanel />
+    </div>
+  );
+};
+
+const ConnectedFloatingLightControl = connect(
+  (state) => ({
+    isOpen: isLightControlPanelOpen(state),
+  }),
+  {
+    onClose: () => setLightControlPanelOpen(false),
+  }
+)(FloatingLightControlPresentation);
+
 const App = ({ onFirstRender }) => (
   <PersistGate
     persistor={persistor}
     onBeforeLift={restoreWorkbench(onFirstRender)}
   >
-    <>
-      <CssBaseline />
-
-      <DarkModeExtraCSSProvider />
-
-      <AppHotkeys />
-
-      <div style={rootStyle}>
-        <Header perspectives={perspectives} workbench={workbench} />
+    <ThemeProvider>
+      <>
+          <CssBaseline />
+          <DarkModeExtraCSSProvider />
+          <AppHotkeys />
+          <div style={rootStyle}>
+            <Header perspectives={perspectives} workbench={workbench} />
+            <div style={{
+              position: 'absolute',
+              top: 80,
+              right: 16,
+              bottom: 16,
+              zIndex: 100,
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'stretch',
+              pointerEvents: 'none',
+            }}>
+              <RightSidebar />
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 16,
+                width: 360,
+                pointerEvents: 'none',
+              }}>
+                <div style={{
+                  backgroundColor: '#1a1b1e',
+                  borderRadius: '16px',
+                  padding: '8px 12px',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
+                  pointerEvents: 'auto',
+                }}>
+                  <LCDClockPanel />
+                </div>
+                <div style={{
+                  backgroundColor: '#1a1b1e',
+                  borderRadius: 16,
+                  padding: '8px 12px',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+                  pointerEvents: 'auto',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 8,
+                  flex: 1,
+                  overflow: 'hidden',
+                }}>
+                  <ShowControlPanel />
+                </div>
+              </div>
+            </div>
+        <ConnectedFloatingLightControl />
+        <BottomConsole />
+        <BottomUAVsWindow />
         <WorkbenchContainer />
         {config?.ribbon?.label && <CornerRibbon {...config.ribbon} />}
         <PendingUAVIdOverlay />
@@ -191,6 +309,7 @@ const App = ({ onFirstRender }) => (
 
       <Notifications />
     </>
+    </ThemeProvider>
   </PersistGate>
 );
 

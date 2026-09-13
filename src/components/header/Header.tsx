@@ -1,6 +1,9 @@
+import type React from 'react';
+import { useState } from 'react';
 import config from 'config';
 
-import Box from '@mui/material/Box';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { connect } from 'react-redux';
 import Shapeshifter from 'react-shapeshifter';
 
@@ -31,17 +34,9 @@ import SafetyButton from './SafetyButton';
 import ServerConnectionSettingsButton from './ServerConnectionSettingsButton';
 import SessionExpiryBox from './SessionExpiryBox';
 import ToolboxButton from './ToolboxButton';
-
-const style = {
-  backgroundColor: '#333',
-  flexGrow: 0,
-  minHeight: 48,
-};
-
-const innerStyle = {
-  display: 'flex',
-  flexFlow: 'row nowrap',
-};
+import MapThemeToggleButton from './MapThemeToggleButton';
+import LightControlButton from './LightControlButton';
+import Toggle3DViewButton from './Toggle3DViewButton';
 
 const componentRegistry: Record<string, React.ComponentType> = {
   'alert-button': AlertButton,
@@ -66,10 +61,13 @@ const componentRegistry: Record<string, React.ComponentType> = {
     />
   ),
   'session-expiry-box': SessionExpiryBox,
+  'light-control-button': LightControlButton,
   'toolbox-button': () => hasFeature('toolboxMenu') && <ToolboxButton />,
   'uav-status-summary': UAVStatusSummary,
   'velocity-summary-header-button': VelocitySummaryHeaderButton,
   'weather-header-button': WeatherHeaderButton,
+  'map-theme-toggle-button': MapThemeToggleButton,
+  'toggle-3d-view-button': Toggle3DViewButton,
 };
 
 type Props = {
@@ -82,33 +80,85 @@ type Props = {
  * Presentation component for the header at the top edge of the main
  * window.
  */
-const Header = ({ isSidebarOpen, showSidebar, toggleSidebar }: Props) => (
-  <div id='header' style={{ ...style, overflow: 'hidden' }}>
-    <div id='header-inner' style={innerStyle}>
-      {showSidebar && (
-        <Shapeshifter
-          color='#999'
-          style={{ cursor: 'pointer' }}
-          shape={isSidebarOpen ? 'close' : 'menu'}
-          onClick={toggleSidebar}
-        />
-      )}
+const Header = ({ isSidebarOpen, showSidebar, toggleSidebar }: Props) => {
+  const [isExpanded, setIsExpanded] = useState(true);
 
-      <PerspectiveBar />
-      <Box sx={{ pr: 0.5 }} />
+  return (
+    <>
+      <div
+        className='header-top-bar-backdrop'
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '72px',
+          zIndex: 1000,
+          pointerEvents: 'none',
+          background:
+            'linear-gradient(180deg, rgba(16, 18, 24, 0.82) 0%, rgba(16, 18, 24, 0.45) 65%, rgba(16, 18, 24, 0) 100%)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          maskImage:
+            'linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 60%, rgba(0, 0, 0, 0) 100%)',
+          WebkitMaskImage:
+            'linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 60%, rgba(0, 0, 0, 0) 100%)',
+        }}
+      />
+      <div
+        id='header'
+        style={{
+          position: 'absolute',
+          top: 16,
+          right: 16,
+          zIndex: 1100,
+          display: 'flex',
+          gap: '8px',
+          alignItems: 'center',
+          pointerEvents: 'none',
+        }}
+      >
+        <div className='header-pill-container'>
+          {showSidebar && (
+            <div style={{ display: 'flex', alignItems: 'center', marginRight: '8px' }}>
+              <Shapeshifter
+                color='#999'
+                style={{ cursor: 'pointer' }}
+                shape={isSidebarOpen ? 'close' : 'menu'}
+                onClick={toggleSidebar}
+              />
+            </div>
+          )}
+          <PerspectiveBar />
+          {config.headerComponents.length > 0 &&
+            config.headerComponents[0].map((component) => {
+              const Component = componentRegistry[component];
+              return <Component key={component} />;
+            })}
+        </div>
 
-      {config.headerComponents
-        .flatMap((group) => [
-          <hr key={`header-group:${group.join(',')}`} />,
-          ...group.map((component) => {
-            const Component = componentRegistry[component];
-            return <Component key={component} />;
-          }),
-        ])
-        .slice(1)}
-    </div>
-  </div>
-);
+        {isExpanded &&
+          config.headerComponents.slice(1).map((group, idx) => (
+            <div key={`pill-${idx}`} className='header-pill-container'>
+              {group.map((component) => {
+                const Component = componentRegistry[component];
+                return <Component key={component} />;
+              })}
+            </div>
+          ))}
+
+        <div
+          className='header-pill-expander'
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <span style={{ color: '#1a1b1e', pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {isExpanded ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </span>
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default connect(
   // mapStateToProps

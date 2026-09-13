@@ -35,6 +35,11 @@ function run(argv) {
       debug: argv.debug,
       rootDir,
       showMenuBar: false,
+      titleBarStyle: 'hiddenInset',
+      trafficLightPosition: { x: 14, y: 14 },
+      vibrancy: 'under-window',
+      visualEffectState: 'active',
+      backgroundColor: '#12141a',
       webPreferences: {
         backgroundThrottling: false,
         sandbox: false, // because we need Node.js modules from the preloader

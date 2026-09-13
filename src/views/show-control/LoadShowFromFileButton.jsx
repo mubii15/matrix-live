@@ -121,12 +121,12 @@ const LoadShowFromFileButton = ({
     <FileButton
       accepts={isFile}
       component={ListItemButton}
-      componentProps={{ sx: { paddingRight: 2 } }}
+      componentProps={{ sx: { paddingRight: 2, display: 'flex', alignItems: 'center', gap: 1 } }}
       filter={EXTENSIONS}
       id='show-file-upload'
       onSelected={onShowFileSelected}
     >
-      <StatusLight status={status} />
+      <StatusLight status={status} style={{ marginTop: 0 }} />
       <ListItemTextWithProgress
         primary={
           loading

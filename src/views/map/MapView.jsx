@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import config from 'config';
 import filter from 'lodash-es/filter';
 import partial from 'lodash-es/partial';
@@ -11,6 +12,7 @@ import { interaction, View, withMap } from '@collmot/ol-react';
 
 import { BaseMap, MapControls, MapToolbars } from '~/components/map';
 import FitAllFeaturesButton from '~/components/map/buttons/FitAllFeaturesButton';
+import MapThemeToggleButton from '~/components/header/MapThemeToggleButton';
 import * as Condition from '~/components/map/conditions';
 import {
   SelectNearestFeature,
@@ -68,6 +70,8 @@ import {
   isFeatureModifiable,
   isFeatureTransformable,
 } from '~/model/openlayers';
+import { Source } from '~/model/sources';
+import { getLicensedLayerById } from '~/selectors/layers';
 import {
   getMapViewCenterPosition,
   getMapViewRotationAngle,
@@ -394,7 +398,10 @@ class MapViewPresentation extends React.Component {
             id='main-map-view'
             view={view}
             useDefaultControls={false}
-            className={toolClasses[selectedTool]}
+            className={clsx(
+              toolClasses[selectedTool],
+              this.props.isMapLight && 'map-theme-light'
+            )}
             style={mapStyles.map}
             onMoveEnd={this._onMapMoved}
           >
@@ -409,6 +416,8 @@ class MapViewPresentation extends React.Component {
                   {/* NOTE: Margin is calibrated such that the vertical      */}
                   {/*       drawing toolbar will not cover any of the drones */}
                   <FitAllFeaturesButton duration={500} margin={80} />
+                  <ToolbarDivider orientation='vertical' />
+                  <MapThemeToggleButton />
                 </>
               }
             />
@@ -698,22 +707,32 @@ class MapViewPresentation extends React.Component {
 /**
  * Connects the map view to the Redux store.
  */
+const baseLayerSelector = getLicensedLayerById('base');
+
 const MapView = connect(
   // mapStateToProps
-  (state) => ({
-    angle: getMapViewRotationAngle(state),
-    position: getMapViewCenterPosition(state),
-    zoom: getMapViewZoom(state),
+  (state) => {
+    const baseLayer = baseLayerSelector(state);
+    const baseSource = baseLayer?.parameters?.['source'];
+    const isMapLight = baseSource === Source.CARTODB.LIGHT;
 
-    geofencePolygonId: getGeofencePolygonId(state),
+    return {
+      angle: getMapViewRotationAngle(state),
+      position: getMapViewCenterPosition(state),
+      zoom: getMapViewZoom(state),
 
-    selectedFeatures: getSelectedFeatureIds(state),
-    selectedTool: getSelectedTool(state),
-    selection: getVirtualSelection(state),
+      geofencePolygonId: getGeofencePolygonId(state),
 
-    uavDetailsPanelFollowsSelection:
-      getFollowMapSelectionInUAVDetailsPanel(state),
-  })
+      selectedFeatures: getSelectedFeatureIds(state),
+      selectedTool: getSelectedTool(state),
+      selection: getVirtualSelection(state),
+
+      uavDetailsPanelFollowsSelection:
+        getFollowMapSelectionInUAVDetailsPanel(state),
+
+      isMapLight,
+    };
+  }
 )(MapViewPresentation);
 
 export default MapView;

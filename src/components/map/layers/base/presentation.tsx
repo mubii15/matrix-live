@@ -198,11 +198,38 @@ export const LayerSource = ({
         />
       );
 
+    case Source.CARTODB.DARK:
+      return (
+        <source.XYZ
+          attributions={attributions}
+          tileLoadFunction={tileLoadFunction}
+          url='https://{a-c}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
+        />
+      );
+
+    case Source.CARTODB.LIGHT:
+      return (
+        <source.XYZ
+          attributions={attributions}
+          tileLoadFunction={tileLoadFunction}
+          url='https://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
+        />
+      );
+
     case Source.OSM:
       return (
         <source.OSM
           tileLoadFunction={tileLoadFunction}
           url='https://tile.skybrush.io/osm/{z}/{x}/{y}.png'
+        />
+      );
+
+    case Source.STADIA.ALIDADE_SMOOTH_DARK:
+      return (
+        <source.XYZ
+          attributions={attributions}
+          tileLoadFunction={tileLoadFunction}
+          url='https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png'
         />
       );
 

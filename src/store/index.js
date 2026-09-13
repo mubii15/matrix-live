@@ -44,7 +44,7 @@ import { bindSelectors } from './subscriptions';
 const persistConfig = {
   key: 'flockwave-client',
   storage: window.bridge ? window.bridge.createStateStore() : localForage,
-  version: 3,
+  version: 8,
   migrate: migrations,
   stateReconciler: defaultStateReconciler,
 
@@ -66,6 +66,7 @@ const persistConfig = {
     'snackbar',
     'uavs',
     'weather',
+    'workbench',
   ],
 
   // do not save more frequently than once every second

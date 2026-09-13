@@ -109,7 +109,7 @@ const LargeControlButtonGroup = ({
       <Box display='flex' flexDirection='row' flex={1}>
         <ColoredButton
           className={classes.button}
-          color={Colors.success}
+          color='#d8f576'
           icon={<PlayArrow fontSize='inherit' />}
           onClick={uavActions.turnMotorsOn}
         >
@@ -119,7 +119,7 @@ const LargeControlButtonGroup = ({
         </ColoredButton>
         <ColoredButton
           className={classes.button}
-          color={Colors.info}
+          color='#d8f576'
           icon={<Clear fontSize='inherit' />}
           onClick={uavActions.turnMotorsOff}
         >
@@ -131,7 +131,7 @@ const LargeControlButtonGroup = ({
       <Box display='flex' flexDirection='row' flex={1}>
         <ColoredButton
           className={classes.button}
-          color={Colors.positionHold}
+          color='#d8f576'
           icon={<PositionHold fontSize='inherit' />}
           onClick={uavActions.holdPosition}
         >
@@ -141,7 +141,7 @@ const LargeControlButtonGroup = ({
         </ColoredButton>
         <ColoredButton
           className={classes.button}
-          color={Colors.warning}
+          color='#d8f576'
           icon={<Home fontSize='inherit' />}
           onClick={uavActions.returnToHome}
         >
@@ -153,7 +153,7 @@ const LargeControlButtonGroup = ({
       <Box display='flex' flexDirection='row' flex={1} mb={0.5}>
         <ColoredButton
           className={classes.button}
-          color={Colors.seriousWarning}
+          color='#d8f576'
           icon={<FlightLand fontSize='inherit' />}
           onClick={uavActions.land}
         >
@@ -163,7 +163,7 @@ const LargeControlButtonGroup = ({
         </ColoredButton>
         <ColoredButton
           className={classes.button}
-          color={Colors.error}
+          color='#ff4d4d'
           icon={<PowerSettingsNew fontSize='inherit' />}
           onClick={uavActions.shutdown}
         >
