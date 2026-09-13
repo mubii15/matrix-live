@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -20,6 +21,16 @@ const rootDir =
     ? path.dirname(fileURLToPath(import.meta.url))
     : __dirname;
 
+function getAppIconPath() {
+  const possiblePaths = [
+    path.join(rootDir, 'assets/icons/icon.png'),
+    path.join(rootDir, '../assets/icons/icon.png'),
+    path.join(process.cwd(), 'assets/icons/icon.png'),
+    path.join(rootDir, 'assets/icons/splash.png'),
+  ];
+  return possiblePaths.find((p) => fs.existsSync(p)) || path.join(process.cwd(), 'assets/icons/icon.png');
+}
+
 /**
  * Main entry point of the application.
  *
@@ -29,11 +40,18 @@ function run(argv) {
   // Allow the Electron state store to be created in the renderer process
   ElectronStore.initRenderer();
 
+  const iconPath = getAppIconPath();
+
+  if (process.platform === 'darwin' && app.dock && fs.existsSync(iconPath)) {
+    app.dock.setIcon(iconPath);
+  }
+
   setupApp({
     appMenu: createAppMenu,
     mainWindow: {
       debug: argv.debug,
       rootDir,
+      icon: iconPath,
       showMenuBar: false,
       titleBarStyle: 'hiddenInset',
       trafficLightPosition: { x: 14, y: 14 },

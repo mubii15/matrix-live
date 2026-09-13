@@ -2,6 +2,9 @@
   "appId": "io.skybrush.live",
   "productName": "Matrix Live",
   "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+  "directories": {
+    "buildResources": "assets/icons"
+  },
   "files": [
     "!**/*",
     "package.json",
@@ -10,6 +13,7 @@
     }
   ],
   "linux": {
+    "icon": "assets/icons/linux/skybrush.png",
     "category": "Utility",
     "target": [
       {
@@ -19,11 +23,13 @@
     ]
   },
   "mac": {
+    "icon": "assets/icons/mac/skybrush.icns",
     "category": "public.app-category.utilities",
     "target": "dmg",
     "darkModeSupport": true
   },
   "win": {
+    "icon": "assets/icons/win/skybrush.ico",
     "target": {
       "target": "nsis",
       "arch": "x64"
