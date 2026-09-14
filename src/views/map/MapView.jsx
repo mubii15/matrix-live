@@ -12,7 +12,7 @@ import { interaction, View, withMap } from '@collmot/ol-react';
 
 import { BaseMap, MapControls, MapToolbars } from '~/components/map';
 import FitAllFeaturesButton from '~/components/map/buttons/FitAllFeaturesButton';
-import MapThemeToggleButton from '~/components/header/MapThemeToggleButton';
+import GeolocationButton from '~/components/map/buttons/GeolocationButton';
 import * as Condition from '~/components/map/conditions';
 import {
   SelectNearestFeature,
@@ -416,8 +416,7 @@ class MapViewPresentation extends React.Component {
                   {/* NOTE: Margin is calibrated such that the vertical      */}
                   {/*       drawing toolbar will not cover any of the drones */}
                   <FitAllFeaturesButton duration={500} margin={80} />
-                  <ToolbarDivider orientation='vertical' />
-                  <MapThemeToggleButton />
+                  <GeolocationButton duration={500} />
                 </>
               }
             />

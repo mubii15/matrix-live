@@ -1,8 +1,9 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 
 import { spawn } from 'child_process';
-import { dialog } from 'electron';
+import { app, dialog } from 'electron';
 import ndjson from 'ndjson';
 import pDefer from 'p-defer';
 import pTimeout from 'p-timeout';
@@ -77,10 +78,18 @@ const endsWith = (string, target) =>
  */
 function getPathsRelatedToAppLocation() {
   const appFolder = getApplicationFolder();
-  const folders = [];
+  const rootPath =
+    typeof app !== 'undefined' && app && typeof app.getAppPath === 'function'
+      ? app.getAppPath()
+      : process.cwd();
+
+  const folders = [
+    path.resolve(rootPath, 'skybrush-server/.venv/bin'),
+    path.resolve(process.cwd(), 'skybrush-server/.venv/bin'),
+  ];
 
   if (isMac) {
-    // First, search in /usr/local/opt/skybrush-server/current/bin, which is
+    // Then, search in /usr/local/opt/skybrush-server/current/bin, which is
     // the standard folder on macOS
     folders.push('/usr/local/opt/skybrush-server/current/bin');
 
@@ -103,6 +112,9 @@ function getPathsRelatedToAppLocation() {
   // other. We also add "Program Files" and "Program Files (x86)" explicitly,
   // and also search in "%LOCALAPPDATA%\Programs"
   if (isWindows) {
+    folders.push(path.resolve(rootPath, 'skybrush-server/.venv/Scripts'));
+    folders.push(path.resolve(process.cwd(), 'skybrush-server/.venv/Scripts'));
+
     const SERVER_FOLDER_NAME = 'Skybrush Server';
     const rootFolders = [
       path.dirname(appFolder),
@@ -141,7 +153,7 @@ const pathsRelatedToAppLocation = Object.freeze(
  */
 const deriveServerPathAndArgumentsFromOptions = async (options) => {
   const { args, timeout } = {
-    args: '',
+    args: [],
     timeout: 5000,
     ...options,
   };
@@ -155,8 +167,25 @@ const deriveServerPathAndArgumentsFromOptions = async (options) => {
     throw new Error('local Skybrush server not found');
   }
 
+  const normalizedArgs = Array.isArray(args) ? [...args] : args ? [args] : [];
+  const realArgs = ['--log-style', 'json', ...normalizedArgs];
+
+  // Auto-detect skybrush.jsonc in the server root if not specified
+  const candidateConfigs = [
+    path.resolve(path.dirname(localServerPath), '..', '..', 'skybrush.jsonc'),
+    path.resolve(process.cwd(), 'skybrush-server', 'skybrush.jsonc'),
+  ];
+  const foundConfig = candidateConfigs.find((p) => fs.existsSync(p));
+  if (
+    foundConfig &&
+    !normalizedArgs.includes('-c') &&
+    !normalizedArgs.includes('--config')
+  ) {
+    realArgs.push('-c', foundConfig);
+  }
+
   // TODO(ntamas): respect the port setting provided by the user
-  return [localServerPath, ['--log-style', 'json', ...args]];
+  return [localServerPath, realArgs];
 };
 
 /**
@@ -218,13 +247,19 @@ const launch = async (options) => {
     isWindows &&
     ['.com', '.bat'].includes(path.extname(serverPath).toLowerCase());
 
+  const serverDir = path.dirname(serverPath);
+  const candidateConfig = path.resolve(serverDir, '..', '..', 'skybrush.jsonc');
+  const serverCwd = fs.existsSync(candidateConfig)
+    ? path.dirname(candidateConfig)
+    : serverDir;
+
   localServerProcess = spawn(
     // Windows quirk: if we need a shell, we need to quote the full path in case
     // it includes a space
     isWindows && needsShell ? `"${serverPath}"` : serverPath,
     realArgs,
     {
-      cwd: path.dirname(serverPath),
+      cwd: serverCwd,
       shell: needsShell,
 
       // stdin of child is closed; stderr is piped to us so we can parse the

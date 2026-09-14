@@ -12,32 +12,33 @@ import { connect } from 'react-redux';
 import DialogHeaderListItem, {
   ICON_PRESETS,
 } from '~/components/DialogHeaderListItem';
-import { isConnected, supportsMapCaching } from '~/features/servers/selectors';
+import { showNotification } from '~/features/snackbar/actions';
 
 import { isMapCachingEnabled } from './selectors';
 import { setMapCachingEnabled } from './slice';
 
 const MapCachingPanel = ({
-  onClearCache,
   onClose,
-  isConnected,
   isMapCachingEnabled,
-  isMapCachingSupported,
   setMapCachingEnabled,
+  dispatchClearCacheSuccess,
   t,
 }) => {
+  const handleClearCache = async () => {
+    try {
+      await caches.delete('matrix-live-map-tiles');
+      dispatchClearCacheSuccess('Offline map cache cleared successfully.');
+    } catch (err) {
+      console.error('Failed to clear map cache:', err);
+    }
+  };
+
   return (
     <>
       <DialogHeaderListItem>
-        {isMapCachingSupported ? ICON_PRESETS.success : ICON_PRESETS.warning}
+        {ICON_PRESETS.success}
         <ListItemText
-          primary={
-            isMapCachingSupported
-              ? t('mapCachingPanel.serverSupport')
-              : isConnected
-                ? t('mapCachingPanel.serverNotSupport')
-                : t('mapCachingPanel.connectToServer')
-          }
+          primary="Client-side offline map caching is ready"
         />
       </DialogHeaderListItem>
       <ListItemButton
@@ -50,10 +51,7 @@ const MapCachingPanel = ({
         <ListItemText primary={t('mapCachingPanel.useCachedMapTiles')} />
       </ListItemButton>
       <DialogActions>
-        <Button
-          disabled={!isMapCachingSupported || !onClearCache}
-          onClick={onClearCache}
-        >
+        <Button onClick={handleClearCache}>
           {t('mapCachingPanel.clearChache')}
         </Button>
         <Box sx={{ flex: 1 }} />
@@ -64,11 +62,9 @@ const MapCachingPanel = ({
 };
 
 MapCachingPanel.propTypes = {
-  isConnected: PropTypes.bool,
   isMapCachingEnabled: PropTypes.bool,
-  isMapCachingSupported: PropTypes.bool,
   setMapCachingEnabled: PropTypes.func,
-  onClearCache: PropTypes.func,
+  dispatchClearCacheSuccess: PropTypes.func,
   onClose: PropTypes.func,
   t: PropTypes.func,
 };
@@ -76,12 +72,11 @@ MapCachingPanel.propTypes = {
 export default connect(
   // mapStateToProps
   (state) => ({
-    isConnected: isConnected(state),
     isMapCachingEnabled: isMapCachingEnabled(state),
-    isMapCachingSupported: supportsMapCaching(state),
   }),
   // mapDispatchToProps
   {
     setMapCachingEnabled,
+    dispatchClearCacheSuccess: showNotification,
   }
 )(withTranslation()(MapCachingPanel));

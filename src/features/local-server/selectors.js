@@ -44,12 +44,16 @@ export const foundLocalServerExecutable = createSelector(
 export const shouldManageLocalServer = createSelector(
   (state) => state.dialogs.serverSettings,
   (state) => state.settings.localServer,
+  (state) => state.localServer,
   foundLocalServerExecutable,
-  (serverSettings, localServer, found) =>
+  (serverSettings, localServerSettings, localServerState, found) =>
     window.bridge &&
     window.bridge.localServer &&
-    localServer.enabled &&
-    isLocalHost(serverSettings.hostName) &&
-    serverSettings.active &&
-    found
+    found &&
+    (
+      localServerState.forceRunning ||
+      (localServerSettings.enabled &&
+       isLocalHost(serverSettings.hostName) &&
+       serverSettings.active)
+    )
 );

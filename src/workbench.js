@@ -122,6 +122,11 @@ export const componentRegistry = {
     label: 'Clocks',
     detachable: true,
   },
+  'server-terminal': {
+    component: views.ServerTerminalPanel,
+    label: 'Server terminal',
+    detachable: true,
+  },
   'log-panel': {
     component: views.LogPanel,
     label: 'Event log',

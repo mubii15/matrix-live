@@ -7,6 +7,7 @@ import LayersIcon from '@mui/icons-material/Layers';
 import PlaceIcon from '@mui/icons-material/Place';
 import CategoryIcon from '@mui/icons-material/Category';
 import CloseIcon from '@mui/icons-material/Close';
+import FlightIcon from '@mui/icons-material/Flight';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import { useState } from 'react';
 
@@ -23,6 +24,7 @@ const tabs: SidebarTab[] = [
   { id: 'location', label: 'Locations', icon: PlaceIcon, Component: views.SavedLocationList },
   { id: 'layers', label: 'Layers', icon: LayersIcon, Component: views.LayerList },
   { id: 'features', label: 'Features', icon: CategoryIcon, Component: views.FeaturePanel },
+  { id: 'uavs', label: 'UAV Details', icon: FlightIcon, Component: views.UAVDetailsPanel },
   { id: 'lights', label: 'Lights', icon: LightbulbIcon, Component: views.LightControlPanel },
 ];
 

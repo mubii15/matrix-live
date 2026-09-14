@@ -20,6 +20,10 @@ import { clearClockList } from '~/features/clocks/slice';
 import { clearConnectionList } from '~/features/connections/slice';
 import { clearDockList } from '~/features/docks/slice';
 import { shouldManageLocalServer } from '~/features/local-server/selectors';
+import {
+  setLocalServerForceRunning,
+  setLocalServerRunning,
+} from '~/features/local-server/slice';
 import { addLogItem } from '~/features/log/slice';
 import {
   calculateAndStoreClockSkew,
@@ -91,6 +95,7 @@ class LocalServerExecutor extends React.Component {
     onError: PropTypes.func,
     onLogMessage: PropTypes.func,
     onStarted: PropTypes.func,
+    onStopped: PropTypes.func,
     port: PropTypes.number,
   };
 
@@ -143,6 +148,10 @@ class LocalServerExecutor extends React.Component {
     this._setDisposer(null);
     this._processIsRunning = false;
 
+    if (this.props.onStopped) {
+      this.props.onStopped();
+    }
+
     const { localServer } = window.bridge;
     localServer.terminate();
   }
@@ -171,6 +180,10 @@ class LocalServerExecutor extends React.Component {
   }
 
   _onProcessExited(code, signal) {
+    if (this.props.onStopped) {
+      this.props.onStopped();
+    }
+
     // Process died unexpectedly
     if (this.props.onError) {
       this.props.onError(
@@ -391,6 +404,7 @@ class ServerConnectionManagerPresentation extends React.Component {
     onDisconnected: PropTypes.func,
     onLocalServerError: PropTypes.func,
     onLocalServerStarted: PropTypes.func,
+    onLocalServerStopped: PropTypes.func,
     onLogMessageReceivedFromLocalServer: PropTypes.func,
     onMessage: PropTypes.func,
     url: PropTypes.string,
@@ -428,6 +442,7 @@ class ServerConnectionManagerPresentation extends React.Component {
       onDisconnected,
       onLocalServerError,
       onLocalServerStarted,
+      onLocalServerStopped,
       onLogMessageReceivedFromLocalServer,
       onMessage,
       url,
@@ -456,6 +471,7 @@ class ServerConnectionManagerPresentation extends React.Component {
             onError={onLocalServerError}
             onLogMessage={onLogMessageReceivedFromLocalServer}
             onStarted={onLocalServerStarted}
+            onStopped={onLocalServerStopped}
           />
         ) : null}
         <Connection
@@ -781,6 +797,8 @@ const ServerConnectionManager = connect(
     },
 
     onLocalServerError(message, wasRunning) {
+      dispatch(setLocalServerRunning(false));
+      dispatch(setLocalServerForceRunning(false));
       const baseMessage = wasRunning
         ? 'Skybrush server died unexpectedly'
         : 'Failed to launch local Skybrush server';
@@ -789,7 +807,13 @@ const ServerConnectionManager = connect(
     },
 
     onLocalServerStarted() {
+      dispatch(setLocalServerRunning(true));
       dispatch(setCurrentServerConnectionState(ConnectionState.CONNECTING));
+    },
+
+    onLocalServerStopped() {
+      dispatch(setLocalServerRunning(false));
+      dispatch(setLocalServerForceRunning(false));
     },
 
     onLogMessageReceivedFromLocalServer({ id, levelname, name, message }) {
@@ -801,10 +825,11 @@ const ServerConnectionManager = connect(
         level: logLevelForLogLevelName(levelname),
         module,
         message,
+        auxiliaryId: 'LOCAL_SERVER',
       };
 
       if (!isNil(id)) {
-        item.auxiliaryId = id;
+        item.auxiliaryId = `LOCAL_SERVER_${id}`;
       }
 
       dispatch(addLogItem(item));

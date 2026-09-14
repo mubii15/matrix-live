@@ -454,6 +454,9 @@
     "useAsExclusionZone": "Use as exclusion zone",
     "useAsGeofence": "Use as geofence"
   },
+  "mapControls": {
+    "myLocation": "Go to my location"
+  },
   "mappingButtonGroup": {
     "editMapping": "Edit mapping",
     "hideEmptyMissionSlots": "Hide empty mission slots",
@@ -1266,6 +1269,16 @@
     "tooltip": "Toolbox",
     "uploadInProgress": "Upload in progress"
   },
+  "uavDetailsDialog": {
+    "close": "Close UAV details",
+    "dragHandle": "Drag window",
+    "tabs": {
+      "logs": "Logs",
+      "messages": "Messages",
+      "preflight": "Preflight",
+      "tests": "Tests"
+    }
+  },
   "uavErrorCode": {
     "0": "No error",
     "1": "Drone is on the ground with motors off",
@@ -1398,10 +1411,16 @@
     "lcd-clock-panel": "Clocks",
     "light-control": "Light control",
     "log-panel": "Event log",
+    "logsAndNotes": "Server Console",
     "map": "Map",
     "mission-editor": "Mission editor",
+    "running": "Running",
     "saved-location-list": "Locations",
+    "server-console": "Server Console",
+    "server-terminal": "Server Terminal",
     "show-control": "Show control",
+    "start-server": "Start Server",
+    "stop-server": "Stop Server",
     "three-d-view": "3D View",
     "uav-details": "UAV details",
     "uav-list": "UAVs"

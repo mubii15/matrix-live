@@ -318,6 +318,7 @@ export const getAPIKeys = createSelector(
   (apiKeys): APIKeysRecord => {
     const result: APIKeysRecord = {
       BING: '',
+      CARTO: '',
       GOOGLE: '',
       MAPBOX: '',
       MAPTILER: '',

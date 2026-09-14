@@ -17,6 +17,7 @@ const providers = [
   enabledTileProviders.googleMaps
     ? { label: 'Google Maps', key: 'GOOGLE' }
     : false,
+  { label: 'CartoDB', key: 'CARTO' },
   { label: 'Mapbox', key: 'MAPBOX' },
   { label: 'Maptiler', key: 'MAPTILER' },
 ].filter(Boolean);

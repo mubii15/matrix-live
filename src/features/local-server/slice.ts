@@ -14,6 +14,7 @@ type LocalServerSliceState = {
     error?: string;
   };
   running: boolean;
+  forceRunning: boolean;
 };
 
 const initialState: LocalServerSliceState = {
@@ -23,6 +24,7 @@ const initialState: LocalServerSliceState = {
     error: undefined,
   },
   running: false,
+  forceRunning: false,
 };
 
 const { actions, reducer } = createSlice({
@@ -62,6 +64,18 @@ const { actions, reducer } = createSlice({
         state.pathScan.error = undefined;
       }
     ),
+
+    setLocalServerForceRunning(state, action: PayloadAction<boolean>) {
+      state.forceRunning = action.payload;
+    },
+
+    toggleLocalServerForceRunning: noPayload<LocalServerSliceState>((state) => {
+      state.forceRunning = !state.forceRunning;
+    }),
+
+    setLocalServerRunning(state, action: PayloadAction<boolean>) {
+      state.running = action.payload;
+    },
   },
 });
 
@@ -70,6 +84,9 @@ export const {
   notifyLocalServerExecutableSearchFinished,
   notifyLocalServerExecutableSearchFailed,
   startLocalServerExecutableSearch,
+  setLocalServerForceRunning,
+  toggleLocalServerForceRunning,
+  setLocalServerRunning,
 } = actions;
 
 export default reducer;
