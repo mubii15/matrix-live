@@ -25,6 +25,10 @@ export namespace Source {
     LIGHT = 'cartodb.light',
   }
 
+  export enum ESRI {
+    WORLD_IMAGERY = 'esri.world_imagery',
+  }
+
   export enum GOOGLE {
     DEFAULT = 'googleMaps.default',
     SATELLITE = 'googleMaps.satellite',
@@ -60,6 +64,7 @@ export namespace Source {
   export type Source =
     | BING
     | CARTODB
+    | ESRI
     | GOOGLE
     | MAPBOX
     | MAPTILER
@@ -78,6 +83,7 @@ export const Sources: Source.Source[] = [
   Source.CARTODB.LIGHT,
   Source.OSM,
   Source.STAMEN.TERRAIN,
+  Source.ESRI.WORLD_IMAGERY,
 ];
 
 // We add Mapbox, Maptiler, Bing Maps and Google Maps map sources only if we
@@ -120,6 +126,9 @@ const attributions = {
     '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     '© <a href="https://carto.com/attributions">CARTO</a>',
   ],
+  esri: [
+    'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer">Esri</a> — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+  ],
   mapbox: [
     '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a>',
     '© <a href="https://www.openstreetmap.org/copyright">' +
@@ -160,8 +169,12 @@ const visualRepresentationsForSources: Record<
     attributions: attributions.cartodb,
   },
   [Source.CARTODB.LIGHT]: {
-    label: 'CartoDB Positron',
+    label: 'CartoDB Voyager',
     attributions: attributions.cartodb,
+  },
+  [Source.ESRI.WORLD_IMAGERY]: {
+    label: 'Satellite (Esri World Imagery)',
+    attributions: attributions.esri,
   },
   [Source.GOOGLE.DEFAULT]: { label: 'Google Maps' },
   [Source.GOOGLE.SATELLITE]: { label: 'Google Maps (satellite)' },
@@ -249,3 +262,40 @@ export function attributionsForSource(source: Source.Source): string[] {
 
   return [];
 }
+
+/**
+ * Checks whether the given source is a satellite imagery source.
+ */
+export function isSatelliteSource(source?: string | null): boolean {
+  return (
+    source === Source.ESRI.WORLD_IMAGERY ||
+    source === Source.MAPBOX.SATELLITE ||
+    source === Source.GOOGLE.SATELLITE ||
+    source === Source.MAPTILER.SATELLITE ||
+    source === Source.BING.AERIAL_WITH_LABELS
+  );
+}
+
+/**
+ * Returns the best available satellite source based on configured API keys,
+ * falling back to Esri World Imagery (no API key required).
+ */
+export function getPreferredSatelliteSource(
+  apiKeys?: Record<string, string | undefined>
+): Source.Source {
+  const keys = apiKeys ?? APIKeys;
+  if (keys?.MAPBOX) {
+    return Source.MAPBOX.SATELLITE;
+  }
+  if (keys?.GOOGLE) {
+    return Source.GOOGLE.SATELLITE;
+  }
+  if (keys?.MAPTILER) {
+    return Source.MAPTILER.SATELLITE;
+  }
+  if (keys?.BING) {
+    return Source.BING.AERIAL_WITH_LABELS;
+  }
+  return Source.ESRI.WORLD_IMAGERY;
+}
+

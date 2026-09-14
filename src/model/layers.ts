@@ -116,7 +116,7 @@ const propertiesForLayerTypes: Record<
     label: 'Base layer',
     icon: Map,
     parameters: {
-      source: 'stadia.alidade_smooth_dark',
+      source: 'esri.world_imagery',
     },
   },
   [LayerType.BEACONS]: {

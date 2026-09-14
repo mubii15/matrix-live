@@ -54,10 +54,10 @@ const baseline: Config = {
     [
       'broadcast-button',
       'toolbox-button',
-      'app-settings-button',
       'alert-button',
       'session-expiry-box',
       'map-theme-toggle-button',
+      'satellite-view-button',
       'toggle-3d-view-button',
     ],
   ],
@@ -89,7 +89,12 @@ const baseline: Config = {
     },
 
     layers: [
-      { id: 'base', type: LayerType.BASE, label: 'Base map' },
+      {
+        id: 'base',
+        type: LayerType.BASE,
+        label: 'Base map',
+        parameters: { source: 'esri.world_imagery' },
+      },
       { id: 'graticule', type: LayerType.GRATICULE, label: 'Graticule' },
       { id: 'beacons', type: LayerType.BEACONS, label: 'Beacons' },
       { id: 'features', type: LayerType.FEATURES, label: 'Features' },

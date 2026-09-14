@@ -210,7 +210,7 @@ export default class UAVFeature extends Feature<Point> {
     const iconImage = new Icon({
       rotateWithView: true,
       rotation: this._headingToRotation(),
-      scale: this._scale,
+      scale: this._scale * 0.5,
       src: droneImages[this._status ?? ''] ?? DroneImage,
     });
     this._iconImage = iconImage;
@@ -223,7 +223,7 @@ export default class UAVFeature extends Feature<Point> {
     const selectionImage = new Icon({
       rotateWithView: true,
       rotation: this._headingToRotation(),
-      scale: this._scale,
+      scale: this._scale * 0.5,
       src: SelectionGlow,
     });
     this._selectionImage = selectionImage;

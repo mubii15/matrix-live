@@ -302,7 +302,7 @@ export function formatIdsAndTruncateTrailingItems(
  * @param naText - Text to return when the input is nil or NaN
  */
 export const formatNumberSafely = (
-  x: number,
+  x?: number | null,
   digits = 0,
   unit = '',
   naText = '—'

@@ -12,6 +12,11 @@ import { connect } from 'react-redux';
 import DialogHeaderListItem, {
   ICON_PRESETS,
 } from '~/components/DialogHeaderListItem';
+import {
+  getServerHttpUrl,
+  isConnected,
+  supportsMapCaching,
+} from '~/features/servers/selectors';
 import { showNotification } from '~/features/snackbar/actions';
 
 import { isMapCachingEnabled } from './selectors';
@@ -19,15 +24,25 @@ import { setMapCachingEnabled } from './slice';
 
 const MapCachingPanel = ({
   onClose,
+  isConnected,
   isMapCachingEnabled,
+  isMapCachingSupported,
+  serverHttpUrl,
   setMapCachingEnabled,
   dispatchClearCacheSuccess,
   t,
 }) => {
   const handleClearCache = async () => {
     try {
-      await caches.delete('matrix-live-map-tiles');
-      dispatchClearCacheSuccess('Offline map cache cleared successfully.');
+      if (isMapCachingSupported && serverHttpUrl) {
+        fetch(`${serverHttpUrl}/map-cache`, { method: 'DELETE' }).catch(() => {});
+      }
+      if (typeof caches !== 'undefined') {
+        await caches.delete('matrix-live-map-tiles');
+      }
+      dispatchClearCacheSuccess(
+        t('mapCachingPanel.cacheCleared', 'Offline map cache cleared successfully.')
+      );
     } catch (err) {
       console.error('Failed to clear map cache:', err);
     }
@@ -36,9 +51,24 @@ const MapCachingPanel = ({
   return (
     <>
       <DialogHeaderListItem>
-        {ICON_PRESETS.success}
+        {isMapCachingSupported
+          ? ICON_PRESETS.success
+          : isConnected
+          ? ICON_PRESETS.warning
+          : ICON_PRESETS.info}
         <ListItemText
-          primary="Client-side offline map caching is ready"
+          primary={
+            isMapCachingSupported
+              ? t('mapCachingPanel.serverSupport')
+              : isConnected
+              ? t('mapCachingPanel.serverNotSupport')
+              : t('mapCachingPanel.connectToServer')
+          }
+          secondary={
+            isMapCachingSupported
+              ? undefined
+              : 'Local client-side tile cache is active as fallback'
+          }
         />
       </DialogHeaderListItem>
       <ListItemButton
@@ -62,7 +92,10 @@ const MapCachingPanel = ({
 };
 
 MapCachingPanel.propTypes = {
+  isConnected: PropTypes.bool,
   isMapCachingEnabled: PropTypes.bool,
+  isMapCachingSupported: PropTypes.bool,
+  serverHttpUrl: PropTypes.string,
   setMapCachingEnabled: PropTypes.func,
   dispatchClearCacheSuccess: PropTypes.func,
   onClose: PropTypes.func,
@@ -72,7 +105,10 @@ MapCachingPanel.propTypes = {
 export default connect(
   // mapStateToProps
   (state) => ({
+    isConnected: isConnected(state),
     isMapCachingEnabled: isMapCachingEnabled(state),
+    isMapCachingSupported: supportsMapCaching(state),
+    serverHttpUrl: getServerHttpUrl(state),
   }),
   // mapDispatchToProps
   {
@@ -80,3 +116,4 @@ export default connect(
     dispatchClearCacheSuccess: showNotification,
   }
 )(withTranslation()(MapCachingPanel));
+

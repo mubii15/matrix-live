@@ -198,6 +198,16 @@ export const LayerSource = ({
         />
       );
 
+    case Source.ESRI.WORLD_IMAGERY:
+      return (
+        <source.XYZ
+          attributions={attributions}
+          tileLoadFunction={tileLoadFunction}
+          maxZoom={19}
+          url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+        />
+      );
+
     case Source.CARTODB.DARK:
       return (
         <source.XYZ
@@ -212,7 +222,8 @@ export const LayerSource = ({
         <source.XYZ
           attributions={attributions}
           tileLoadFunction={tileLoadFunction}
-          url={`https://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png${apiKeys.CARTO ? `?key=${apiKeys.CARTO}` : ''}`}
+          maxZoom={20}
+          url={`https://{a-c}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png${apiKeys.CARTO ? `?key=${apiKeys.CARTO}` : ''}`}
         />
       );
 

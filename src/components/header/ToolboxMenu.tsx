@@ -1,6 +1,7 @@
 import Build from '@mui/icons-material/Build';
 import Functions from '@mui/icons-material/Functions';
 import HelpOutline from '@mui/icons-material/HelpOutline';
+import SettingsIcon from '@mui/icons-material/Settings';
 import Tune from '@mui/icons-material/Tune';
 import VpnKey from '@mui/icons-material/VpnKey';
 import Divider from '@mui/material/Divider';
@@ -21,6 +22,7 @@ import { showAveragingDialog } from '~/features/measurement/slice';
 import { showParameterUploadDialog } from '~/features/parameters/actions';
 import { JOB_TYPE as PARAMETER_UPLOAD_JOB_TYPE } from '~/features/parameters/constants';
 import { isConnected } from '~/features/servers/selectors';
+import { toggleAppSettingsDialog } from '~/features/settings/actions';
 import { isDeveloperModeEnabled } from '~/features/session/selectors';
 import { getRunningUploadJobType } from '~/features/upload/selectors';
 import { showVersionCheckDialog } from '~/features/version-check/slice';
@@ -43,6 +45,7 @@ type ToolboxMenuPresentationProps = Readonly<{
   showMapCachingDialog: () => void;
   showParameterUploadDialog: () => void;
   showVersionCheckDialog: () => void;
+  toggleAppSettingsDialog: () => void;
 }> &
   MenuProps;
 
@@ -57,6 +60,7 @@ const ToolboxMenuPresentation = ({
   showMapCachingDialog,
   showParameterUploadDialog,
   showVersionCheckDialog: _showVersionCheckDialog,
+  toggleAppSettingsDialog,
   requestClose,
   ...rest
 }: ToolboxMenuPresentationProps): React.JSX.Element => {
@@ -127,6 +131,12 @@ const ToolboxMenuPresentation = ({
         />
       </MenuItem>
       <Divider />
+      <MenuItem onClick={createClickListener(toggleAppSettingsDialog)}>
+        <ListItemIcon>
+          <SettingsIcon />
+        </ListItemIcon>
+        <ListItemText primary={t('preferences')} />
+      </MenuItem>
       <MenuItem
         disabled={!isConnected}
         onClick={createClickListener(showLicenseInfoDialog)}
@@ -172,5 +182,6 @@ export default connect(
     showMapCachingDialog,
     showParameterUploadDialog,
     showVersionCheckDialog,
+    toggleAppSettingsDialog,
   }
 )(ToolboxMenuPresentation);

@@ -434,6 +434,7 @@
     "offlineMaps": "Offline maps"
   },
   "mapCachingPanel": {
+    "cacheCleared": "Offline map cache cleared successfully.",
     "clearChache": "Clear cache",
     "connectToServer": "Connect to a server with offline map support",
     "serverNotSupport": "Server does not support offline map caching",
@@ -455,7 +456,9 @@
     "useAsGeofence": "Use as geofence"
   },
   "mapControls": {
-    "myLocation": "Go to my location"
+    "myLocation": "Go to my location",
+    "switchToMap": "Switch to street map",
+    "switchToSatellite": "Switch to satellite view"
   },
   "mappingButtonGroup": {
     "editMapping": "Edit mapping",
@@ -959,6 +962,7 @@
       "missionSetupDescription": "Used before multi-drone missions to check whether each drone is at its prescribed takeoff position and is facing the right direction.",
       "operationSettings": "Operations",
       "uavOperationConfirmations": "UAV operation confirmations",
+      "uavTitle": "UAV {{id}}",
       "warn": "Warn about drones not seen for at least"
     }
   },
@@ -1266,7 +1270,7 @@
     "licenseInfo": "License info",
     "offlineMaps": "Offline maps",
     "paramUpload": "Parameter upload",
-    "tooltip": "Toolbox",
+    "tooltip": "Settings & Tools",
     "uploadInProgress": "Upload in progress"
   },
   "uavDetailsDialog": {

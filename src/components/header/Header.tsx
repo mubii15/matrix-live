@@ -35,6 +35,7 @@ import ServerConnectionSettingsButton from './ServerConnectionSettingsButton';
 import SessionExpiryBox from './SessionExpiryBox';
 import ToolboxButton from './ToolboxButton';
 import MapThemeToggleButton from './MapThemeToggleButton';
+import SatelliteViewButton from './SatelliteViewButton';
 import LightControlButton from './LightControlButton';
 import Toggle3DViewButton from './Toggle3DViewButton';
 
@@ -67,6 +68,7 @@ const componentRegistry: Record<string, React.ComponentType> = {
   'velocity-summary-header-button': VelocitySummaryHeaderButton,
   'weather-header-button': WeatherHeaderButton,
   'map-theme-toggle-button': MapThemeToggleButton,
+  'satellite-view-button': SatelliteViewButton,
   'toggle-3d-view-button': Toggle3DViewButton,
 };
 

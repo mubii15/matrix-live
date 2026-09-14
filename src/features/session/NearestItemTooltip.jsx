@@ -31,6 +31,7 @@ const NearestItemTooltip = ({ featureId, ...rest }) => {
       duration={0}
       placement='right'
       plugins={[followCursor]}
+      theme='uav-card'
       visible={visible}
       content={
         visible ? <NearestItemTooltipContent featureId={featureId} /> : null

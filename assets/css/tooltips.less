@@ -109,3 +109,22 @@
   width: 16px;
   height: 6px;
 }
+
+/* Custom theme for modern UAV telemetry card tooltip */
+.tippy-box[data-theme~='uav-card'],
+.tippy-box:has(.drone-card-container) {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+
+  > .tippy-content {
+    padding: 0 !important;
+  }
+
+  > .tippy-arrow,
+  > .tippy-svg-arrow {
+    display: none !important;
+  }
+}
+

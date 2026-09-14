@@ -1,11 +1,14 @@
 import { createSelector } from '@reduxjs/toolkit';
+import noop from 'lodash-es/noop';
 import { type ChangeEvent } from 'react';
 import { connect } from 'react-redux';
 
 import { isMapCachingEnabled } from '~/features/map-caching/selectors';
 import { selectMapSource } from '~/features/map/layers';
-  // Removed unused server-side selectors
-
+import {
+  getServerHttpUrl,
+  supportsMapCaching,
+} from '~/features/servers/selectors';
 import { getAPIKeys } from '~/features/settings/selectors';
 import { type Source } from '~/model/sources';
 import type { RootState } from '~/store/reducers';
@@ -49,68 +52,97 @@ const loadTile: LoadImageTileFunction = (imageTile, url) => {
 };
 
 /**
+ * Function that takes the URL of the server, and returns another function that
+ * loads tiles into an OpenLayers layer in a way that passes through the
+ * server caches.
+ */
+const getCachedTileLoader = (serverUrl: string): LoadImageTileFunction => {
+  return (imageTile, url) => {
+    const cachedUrl = `${serverUrl}/map-cache/_?url=` + encodeURIComponent(url);
+    loadTile(imageTile, cachedUrl);
+  };
+};
+
+/**
+ * Normalizes tile URLs with rotating subdomains (e.g. Carto, Stadia) to a single key
+ * so cache lookups succeed offline regardless of subdomain rotation.
+ */
+const normalizeUrlForCache = (url: string): string =>
+  url.replace(/https:\/\/[a-d]\.basemaps\.cartocdn\.com/, 'https://basemaps.cartocdn.com');
+
+/**
  * Client-side tile loader function that loads tiles using the browser's Cache API.
  * Uses a Stale-While-Revalidate strategy to serve from offline cache instantly, 
  * while keeping it updated in the background when online.
  */
-const loadTileWithCache: LoadImageTileFunction = async (imageTile, url) => {
+const loadTileWithCache: LoadImageTileFunction = (imageTile, url) => {
   const img = imageTile.getImage();
   if (!(img instanceof HTMLImageElement || img instanceof HTMLVideoElement)) {
     return;
   }
-  
+
   img.crossOrigin = 'anonymous';
 
-  // Revoke object URL to prevent memory leaks once image is processed
-  const cleanup = () => {
-    if (img.src.startsWith('blob:')) {
-      URL.revokeObjectURL(img.src);
-    }
-    img.onload = null;
-    img.onerror = null;
-  };
-  
-  img.onload = cleanup;
-  img.onerror = cleanup;
+  const cacheKey = normalizeUrlForCache(url);
 
-  try {
-    const cache = await caches.open('matrix-live-map-tiles');
-    const cachedResponse = await cache.match(url);
-    
-    if (cachedResponse) {
-      const blob = await cachedResponse.blob();
-      img.src = URL.createObjectURL(blob);
-      
-      // Revalidate and update cache in the background
-      fetch(url).then(async (res) => {
-        if (res.ok) {
-          await cache.put(url, res.clone());
+  void (async () => {
+    try {
+      const cache = await caches.open('matrix-live-map-tiles');
+      const cachedResponse = await cache.match(cacheKey);
+
+      if (cachedResponse) {
+        const blob = await cachedResponse.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        img.src = objectUrl;
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 10000);
+
+        // Revalidate and update cache in the background when online
+        if (typeof navigator !== 'undefined' && navigator.onLine) {
+          fetch(url)
+            .then(async (res) => {
+              if (res.ok) {
+                await cache.put(cacheKey, res.clone());
+              }
+            })
+            .catch(noop);
         }
-      }).catch(() => {}); // Ignore offline errors
-    } else {
-      const res = await fetch(url);
-      if (res.ok) {
-        await cache.put(url, res.clone());
-        const blob = await res.blob();
-        img.src = URL.createObjectURL(blob);
       } else {
-        img.src = url; // Fallback
+        const res = await fetch(url);
+        if (res.ok) {
+          await cache.put(cacheKey, res.clone());
+          const blob = await res.blob();
+          const objectUrl = URL.createObjectURL(blob);
+          img.src = objectUrl;
+          setTimeout(() => URL.revokeObjectURL(objectUrl), 10000);
+        } else {
+          img.src = url;
+        }
       }
+    } catch {
+      // Fallback if offline and tile not in cache, or if fetch fails
+      img.src = url;
     }
-  } catch (err) {
-    // Fallback if Cache API fails
-    img.src = url;
-  }
+  })();
 };
 
 /**
  * Selector that returns a function that takes an image tile and a URL and loads
- * the tile at the given URL to the given image tile, optionally piping it
- * through the client-side offline map cache.
+ * the tile at the given URL to the given image tile, piping it through either
+ * the server's map cache or the local client-side offline cache.
  */
 const getMapTileLoaderFunction = createSelector(
   isMapCachingEnabled,
-  (cachingEnabled) => (cachingEnabled ? loadTileWithCache : loadTile)
+  supportsMapCaching,
+  getServerHttpUrl,
+  (cachingEnabled, cachingSupported, serverHttpUrl) => {
+    if (!cachingEnabled) {
+      return loadTile;
+    }
+    if (cachingSupported && serverHttpUrl) {
+      return getCachedTileLoader(serverHttpUrl);
+    }
+    return loadTileWithCache;
+  }
 );
 
 const LayerSource = connect(

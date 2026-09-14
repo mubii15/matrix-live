@@ -65,6 +65,11 @@ const migrations = {
       }
     }
   }),
+  9: createNextState((state) => {
+    if (state.map?.layers?.byId?.base?.parameters) {
+      state.map.layers.byId.base.parameters.source = 'esri.world_imagery';
+    }
+  }),
 };
 
 export default createMigrate(migrations);

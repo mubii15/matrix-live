@@ -1,4 +1,4 @@
-import BusinessCenter from '@mui/icons-material/BusinessCenter';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
@@ -39,7 +39,7 @@ const ToolboxButtonPresentation = ({ numberOfAveragingInProgress }: Props) => {
         onClick={handleClick}
       >
         <SidebarBadge color={Colors.warning} visible={needsBadge} />
-        <BusinessCenter />
+        <SettingsIcon />
       </GenericHeaderButton>
       <ToolboxMenu
         id='toolbox-menu'
